@@ -54,7 +54,6 @@ public class ContaCorrenteController {
         }
     }
 
-
     @GetMapping(value = "/{idVendedor}/full", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Consulta Movimento de todos os clientes")
     public ResponseEntity<List<ContaCorrenteDTO>> ConsultaHistoricoConta(
