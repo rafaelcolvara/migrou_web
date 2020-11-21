@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.migrou.implementacoes.pessoas.vendedor.VendedorClienteImpl;
 import com.migrou.types.dto.ClienteDashDTO;
+import com.migrou.types.dto.VendedorListaClientesDTO;
+import com.migrou.types.entity.VendedorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +35,9 @@ public class ContaCorrenteController {
 
     @Autowired
     ContaCorrenteImpl contacorrenteService;
+
+    @Autowired
+    VendedorClienteImpl vendedorCliente;
 
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Registra lançamento na conta corrente")
@@ -71,6 +77,30 @@ public class ContaCorrenteController {
         try {
 
             return new ResponseEntity<ClienteDashDTO>(contacorrenteService.buscaDashCliente(idCliente, idVendedor), HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+    @GetMapping(value = "/{idVendedor}/DashTodosClientes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Consulta todos os clientes do vendedor contendo informações de consumo de compras para dashboard")
+    public ResponseEntity<?> ConsultaListaDashCliente(@PathVariable("idVendedor") UUID idVendedor) {
+
+        try {
+            List<ClienteDashDTO> ListaClientesRetorno =  new ArrayList<>();
+            VendedorListaClientesDTO listaClienteEntity = vendedorCliente.buscaClientesDoVendedor(idVendedor);
+            listaClienteEntity.getClientes().forEach(x -> {
+                try {
+                    ListaClientesRetorno.add(contacorrenteService.buscaDashCliente(x.getIdCliente(), idVendedor));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            return new ResponseEntity<List<ClienteDashDTO>>(ListaClientesRetorno, HttpStatus.OK);
 
         } catch (Exception e) {
 

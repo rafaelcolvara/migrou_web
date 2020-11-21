@@ -89,7 +89,5 @@ public class VendedorController {
 		return new ResponseEntity<ClienteListaVendedoresDTO>(cliente, HttpStatus.OK);
 	}
 
-
-
 }
 
