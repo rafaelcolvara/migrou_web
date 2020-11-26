@@ -13,6 +13,7 @@ import com.migrou.interfaces.campanha.CampanhaJPARepository;
 import com.migrou.interfaces.cliente.ClienteJPARepository;
 import com.migrou.interfaces.vendedor.VendedorJPARepository;
 import com.migrou.types.dto.ClienteDashDTO;
+import com.migrou.types.dto.UltimoResgateDTO;
 import com.migrou.types.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -216,5 +217,17 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 		List<ContaCorrenteEntity> ccNaoSacado = contaCorrenteJPA.findAllCashBackNotWithdrawed( idCliente,  idVendedor);
 		if (ccNaoSacado.size() > 0)  {System.out.println("Achou");}
 		return ccNaoSacado.get(0);
+	}
+
+	@Override
+	public List<UltimoResgateDTO> buscaUltimoResgateDosClientes(UUID idVendedor) {
+
+		List<UltimoResgateDTO> ultimoResgateDTOS = new ArrayList<>();
+		List<ContaCorrenteEntity> contaCorrenteEntityList =  contaCorrenteJPA.findAllByVendedorIdPessoaAndFlgResgatadoIsTrue(idVendedor);
+		contaCorrenteEntityList.forEach(x -> {
+			ultimoResgateDTOS.add(UltimoResgateDTO.builder().idCliente(x.getIdCliente()).DataUltimoResgate(x.getDataPgCashBack()).vlrUltimoResgate(x.getValorCashBack()).idVendedor(x.getIdVendedor()).build());
+		});
+
+		return ultimoResgateDTOS;
 	}
 }

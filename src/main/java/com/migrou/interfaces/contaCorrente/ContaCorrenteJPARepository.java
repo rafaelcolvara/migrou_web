@@ -13,7 +13,10 @@ public interface ContaCorrenteJPARepository extends JpaRepository<ContaCorrenteE
 	
 	List<ContaCorrenteEntity> findAllByClienteIdPessoaAndVendedorIdPessoaAndFlgResgatadoFalse(UUID idCliente, UUID idVendedor);
 
+	List<ContaCorrenteEntity> findAllByVendedorIdPessoaAndFlgResgatadoIsTrue(UUID idVendedor);
+
 	@Query("SELECT u FROM ContaCorrenteEntity u WHERE u.idCliente = ?1 and u.idVendedor = ?2 and u.valorCashBack is not null and u.flgResgatado = false")
 	List<ContaCorrenteEntity> findAllCashBackNotWithdrawed(UUID idCliente, UUID idVendedor);
+
 
 }

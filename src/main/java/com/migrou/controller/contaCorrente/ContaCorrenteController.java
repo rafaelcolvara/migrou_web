@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.migrou.implementacoes.pessoas.vendedor.VendedorClienteImpl;
 import com.migrou.types.dto.ClienteDashDTO;
+import com.migrou.types.dto.UltimoResgateDTO;
 import com.migrou.types.dto.VendedorListaClientesDTO;
 import com.migrou.types.entity.VendedorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,5 +109,21 @@ public class ContaCorrenteController {
 
         }
     }
+
+    @GetMapping(value = "/{idVendedor}/BuscaUltimosResgates", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Busca todos os resgates dos clientes do vendedor informado")
+    public ResponseEntity<?> ConsultaResgatesDosSeusCliente(@PathVariable("idVendedor") UUID idVendedor) {
+
+        try {
+
+            return new ResponseEntity<List<UltimoResgateDTO>>(contacorrenteService.buscaUltimoResgateDosClientes(idVendedor), HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
 
 }
