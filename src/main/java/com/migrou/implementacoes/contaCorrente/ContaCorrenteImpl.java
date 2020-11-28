@@ -51,7 +51,7 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 	@Autowired
 	ContaCorrenteBO contaCorrenteBO;
 
-
+	Calendar dataLocal = Calendar.getInstance();
 
 	@Override
 	@Transactional
@@ -72,7 +72,7 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 			throw new Exception("Informa o valor de lançamento");
 
 		if (Objects.isNull(contacorrente.getDtLancamento()))
-			contacorrente.setDtLancamento(new Date());
+			contacorrente.setDtLancamento(dataLocal.getTime());
 
 		validaLancamento(contacorrente.getCliente().getIdCliente(), contacorrente.getVendedor().getIdVendedor());
 
@@ -223,7 +223,7 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 	public List<UltimoResgateDTO> buscaUltimoResgateDosClientes(UUID idVendedor) {
 
 		List<UltimoResgateDTO> ultimoResgateDTOS = new ArrayList<>();
-		List<ContaCorrenteEntity> contaCorrenteEntityList =  contaCorrenteJPA.findAllByVendedorIdPessoaAndFlgResgatadoIsTrue(idVendedor);
+		List<ContaCorrenteEntity> contaCorrenteEntityList =  contaCorrenteJPA.findAllByVendedorIdPessoaAndFlgResgatadoIsTrueAndValorCashBackIsNotNull(idVendedor);
 		contaCorrenteEntityList.forEach(x -> {
 			ultimoResgateDTOS.add(UltimoResgateDTO.builder().idCliente(x.getIdCliente()).DataUltimoResgate(x.getDataPgCashBack()).vlrUltimoResgate(x.getValorCashBack()).idVendedor(x.getIdVendedor()).build());
 		});
