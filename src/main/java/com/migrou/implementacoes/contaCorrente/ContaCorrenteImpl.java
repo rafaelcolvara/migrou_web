@@ -119,10 +119,11 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 		CampanhaEntity campanhaEntity = campanhaJPARepository.findById(contaCorrenteDTO.getCliente().getIdCampanha()).orElseThrow(() -> new Exception("Cliente sem campanha"));
 		if (campanhaEntity.isFlgPercentualSobreCompras()){
 			// verificar se já nao tem cashback para sacar
-			if (lancamentos.stream().count()+1 > campanhaEntity.getQtLancamentosPercentualSobreCompras())
-				throw new Exception("Existe lancamentos pendentes para cashback, de acordo com a regra para este cliente");
-			else {
-				contaCorrenteDTO.setValorCashBack(campanhaEntity.getPrcTotalLancamentosPercentualSobreCompras().multiply(contaCorrenteDTO.getValorLancamento()).divide(new BigDecimal(100)));
+			BigDecimal vlrGastosCliente = lancamentos.stream().map(x -> x.getValorLancamento()).reduce(BigDecimal.ZERO, BigDecimal::add);
+			if ((lancamentos.stream().count()+1) >= campanhaEntity.getQtLancamentosPercentualSobreCompras()){
+				BigDecimal vlrSomaLancamentos =  lancamentos.stream().map(x -> x.getValorLancamento()).reduce(BigDecimal.ZERO, BigDecimal::add);
+				;
+				contaCorrenteDTO.setValorCashBack(campanhaEntity.getPrcTotalLancamentosPercentualSobreCompras().multiply(vlrSomaLancamentos.add(new BigDecimal(contaCorrenteDTO.getValorLancamento().doubleValue()))).divide(new BigDecimal(100)));
 			}
 		}
 		BigDecimal vlrTotalJaRealizadas = new BigDecimal(0);
@@ -133,10 +134,7 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 					.map(x -> x.getValorLancamento())
 					.reduce(BigDecimal.ZERO, BigDecimal::add );
 
-
-			System.out.println(vlrTotalJaRealizadas);
 			vlrTotalJaRealizadas = vlrTotalJaRealizadas.add(vlrTotal).add(contaCorrenteDTO.getValorLancamento());
-			System.out.println(vlrTotalJaRealizadas);
 
 			//  1  : vlrTotalJaRealizadas > campanha
 			// -1  : vlrTotalJaRealizadas < campanha
