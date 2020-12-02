@@ -225,7 +225,7 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 		List<UltimoResgateDTO> ultimoResgateDTOS = new ArrayList<>();
 		List<ContaCorrenteEntity> contaCorrenteEntityList =  contaCorrenteJPA.findAllByVendedorIdPessoaAndFlgResgatadoIsTrue(idVendedor);
 		contaCorrenteEntityList.forEach(x -> {
-			ultimoResgateDTOS.add(UltimoResgateDTO.builder().idCliente(x.getIdCliente()).DataUltimoResgate(x.getDataPgCashBack()).vlrUltimoResgate(x.getValorCashBack()).idVendedor(x.getIdVendedor()).build());
+			ultimoResgateDTOS.add(UltimoResgateDTO.builder().idCliente(x.getIdCliente()).DataUltimoResgate(x.getDataPgCashBack()).vlrUltimoResgate(x.getValorCashBack()).idVendedor(x.getIdVendedor()).nomeCliente(x.getCliente().getNome()).build());
 		});
 
 		return ultimoResgateDTOS;

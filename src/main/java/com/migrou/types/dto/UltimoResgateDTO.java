@@ -18,6 +18,7 @@ import java.util.UUID;
 public class UltimoResgateDTO implements Serializable {
 
     UUID idCliente;
+    String nomeCliente;
     UUID idVendedor;
     LocalDateTime DataUltimoResgate;
     BigDecimal vlrUltimoResgate;
