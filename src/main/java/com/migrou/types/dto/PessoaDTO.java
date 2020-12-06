@@ -45,7 +45,7 @@ public class PessoaDTO implements Serializable {
 
     private boolean flgEmailValido;
 
-    private String base64Foto;
+    private String urlFoto;
 
     private String tipoPessoa;
 

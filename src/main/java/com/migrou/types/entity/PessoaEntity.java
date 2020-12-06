@@ -63,10 +63,8 @@ public class PessoaEntity implements Serializable{
 	@Column(name= "DT_NASCIMENTO")
     private Date dtNascimento;
 
-    @Lob
-    @Column(name = "FOTO")
-    @Type(type="org.hibernate.type.BinaryType")
-    private byte[] foto;
+    @Column(name = "URLFOTO")
+    private String urlFoto;
 
 	@Column(name = "EMAIL_VALIDO", columnDefinition = "boolean default false" )
     private Boolean flgEmailValido;

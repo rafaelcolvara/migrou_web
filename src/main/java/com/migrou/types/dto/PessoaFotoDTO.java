@@ -23,5 +23,5 @@ public class PessoaFotoDTO implements Serializable {
 
 	UUID idPessoa;
 	
-	String byteArrayFoto;
+	String urlFoto;
 }

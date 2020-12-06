@@ -28,7 +28,7 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaDto.setId(UUID.fromString(pessoaEntity.getIdPessoa().toString()));
         pessoaDto.setSenha(pessoaEntity.getSenha());
         pessoaDto.setDataNascimento(pessoaEntity.getDtNascimento());
-        pessoaDto.setBase64Foto(pessoaEntity.getFoto()!=null?Base64.getEncoder().encodeToString(pessoaEntity.getFoto()):null);
+        pessoaDto.setUrlFoto(pessoaEntity.getUrlFoto());
         pessoaDto.setFlgEmailValido(pessoaEntity.getFlgEmailValido());
         pessoaDto.setNrCelular(pessoaEntity.getNrCelular());
         return pessoaDto;
@@ -44,7 +44,7 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaDto.setNomeNegocio(pessoaEntity.getNomeNegocio());
         pessoaDto.setSegmentoComercial(pessoaEntity.getNomeSegmento());
         pessoaDto.setDataNascimento(pessoaEntity.getDtNascimento());
-        pessoaDto.setBase64Foto(pessoaEntity.getFoto()!=null?Base64.getEncoder().encodeToString(pessoaEntity.getFoto()):null);
+        pessoaDto.setUrlFoto(pessoaEntity.getUrlFoto());
         pessoaDto.setFlgEmailValido(pessoaEntity.getFlgEmailValido());
         pessoaDto.setNrCelular(pessoaEntity.getNrCelular());
         return pessoaDto;
@@ -61,7 +61,7 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaEntity.setEmail(pessoaDTO.getEmail());
         pessoaEntity.setDtNascimento(pessoaDTO.getDataNascimento());
         pessoaEntity.setSenha(pessoaDTO.getSenha());
-        pessoaEntity.setFoto(pessoaDTO.getBase64Foto()!=null?pessoaDTO.getBase64Foto().getBytes():null);
+        pessoaEntity.setUrlFoto(pessoaDTO.getUrlFoto());
         pessoaEntity.setFlgEmailValido(pessoaDTO.isFlgEmailValido());
         pessoaEntity.setNrCelular(pessoaDTO.getNrCelular());
         return pessoaEntity;
@@ -71,7 +71,7 @@ public class PessoaBO<T extends PessoaEntity> {
     public PessoaFotoDTO parsePojoToDtoFoto(PessoaEntity pessoaEntity) {
         PessoaFotoDTO pessoaDto = new PessoaFotoDTO();
         pessoaDto.setIdPessoa(pessoaEntity.getIdPessoa());
-        pessoaDto.setByteArrayFoto(Base64.getEncoder().encodeToString(pessoaEntity.getFoto()));
+        pessoaDto.setUrlFoto(pessoaEntity.getUrlFoto());
         return pessoaDto;
     }
 
@@ -79,7 +79,7 @@ public class PessoaBO<T extends PessoaEntity> {
 
         PessoaEntity pessoaEntity = new PessoaEntity();
         pessoaEntity.setIdPessoa(pessoaDTO.getIdPessoa());
-        pessoaEntity.setFoto(pessoaDTO.getByteArrayFoto().getBytes());
+        pessoaEntity.setUrlFoto(pessoaDTO.getUrlFoto());
         return pessoaEntity;
     }
 

@@ -137,7 +137,7 @@ public class PessoaImpl implements PessoaInterface {
     public void AtualizaFoto(PessoaFotoDTO pessoaFoto) throws Exception {
 
         PessoaEntity pessoa = pessoaJpa.findById(pessoaFoto.getIdPessoa()).orElseThrow(() -> new Exception("Id não encontrado"));
-        pessoa.setFoto(org.apache.tomcat.util.codec.binary.Base64.decodeBase64(pessoaFoto.getByteArrayFoto()));
+        pessoa.setUrlFoto(pessoaFoto.getUrlFoto());
         pessoaJpa.save(pessoa);
     }
 
@@ -147,7 +147,7 @@ public class PessoaImpl implements PessoaInterface {
         pessoaReturn.setIdPessoa(idPessoa);
         PessoaEntity pess = new PessoaEntity();
         pess = pessoaJpa.findById(idPessoa).orElseThrow(() -> new Exception("nao encoutrou pessoa"));
-        pessoaReturn.setByteArrayFoto(Base64.getEncoder().encodeToString(pess.getFoto()));
+        pessoaReturn.setUrlFoto(pess.getUrlFoto());
         pessoaReturn.setIdPessoa(pess.getIdPessoa());
         return pessoaReturn;
     }
