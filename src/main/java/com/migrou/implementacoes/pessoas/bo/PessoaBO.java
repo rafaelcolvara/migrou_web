@@ -25,7 +25,7 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaDto.setDataCadastro(pessoaEntity.getDtCadastro());
         pessoaDto.setEmail(pessoaEntity.getEmail());
         pessoaDto.setNome(pessoaEntity.getNome());
-        pessoaDto.setId(pessoaEntity.getIdPessoa().toString());
+        pessoaDto.setId(UUID.fromString(pessoaEntity.getIdPessoa().toString()));
         pessoaDto.setSenha(pessoaEntity.getSenha());
         pessoaDto.setDataNascimento(pessoaEntity.getDtNascimento());
         pessoaDto.setBase64Foto(pessoaEntity.getFoto()!=null?Base64.getEncoder().encodeToString(pessoaEntity.getFoto()):null);
@@ -39,7 +39,7 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaDto.setDataCadastro(pessoaEntity.getDtCadastro());
         pessoaDto.setEmail(pessoaEntity.getEmail());
         pessoaDto.setNome(pessoaEntity.getNome());
-        pessoaDto.setId(pessoaEntity.getIdPessoa().toString());
+        pessoaDto.setId(UUID.fromString(pessoaEntity.getIdPessoa().toString()));
         pessoaDto.setSenha(pessoaEntity.getSenha());
         pessoaDto.setNomeNegocio(pessoaEntity.getNomeNegocio());
         pessoaDto.setSegmentoComercial(pessoaEntity.getNomeSegmento());
@@ -54,7 +54,7 @@ public class PessoaBO<T extends PessoaEntity> {
 
         ClienteEntity pessoaEntity = new ClienteEntity();
 
-        pessoaEntity.setIdPessoa(pessoaDTO.getId()!=null?UUID.fromString(pessoaDTO.getId()):null);
+        pessoaEntity.setIdPessoa(pessoaDTO.getId()!=null?pessoaDTO.getId():null);
         pessoaEntity.setCpfCnpj(pessoaDTO.getCpfCnpj());
         pessoaEntity.setDtCadastro(pessoaDTO.getDataCadastro());
         pessoaEntity.setNome(pessoaDTO.getNome());

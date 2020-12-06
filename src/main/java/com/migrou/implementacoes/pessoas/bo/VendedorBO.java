@@ -25,7 +25,7 @@ public class VendedorBO {
 			vendedor.setDtNascimento(vendedorDTO.getPessoaDTO().getDataNascimento());
 			vendedor.setEmail(vendedorDTO.getPessoaDTO().getEmail());
 			vendedor.setNome(vendedorDTO.getPessoaDTO().getNome());
-			if (vendedorDTO.getPessoaDTO().getId()!=null) vendedor.setIdPessoa(UUID.fromString(vendedorDTO.getPessoaDTO().getId()));
+			if (vendedorDTO.getPessoaDTO().getId()!=null) vendedor.setIdPessoa(vendedorDTO.getPessoaDTO().getId());
 		}
 		return vendedor;
 

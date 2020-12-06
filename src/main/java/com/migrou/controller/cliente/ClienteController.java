@@ -1,22 +1,19 @@
 package com.migrou.controller.cliente;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.migrou.implementacoes.pessoas.cliente.ClienteImpl;
 import com.migrou.implementacoes.pessoas.vendedor.VendedorClienteImpl;
+import com.migrou.types.dto.ClienteDTO;
 import com.migrou.types.dto.ClienteListaVendedoresDTO;
-import com.migrou.types.dto.VendedorListaClientesDTO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.migrou.implementacoes.pessoas.cliente.ClienteImpl;
-import com.migrou.types.dto.ClienteDTO;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/cliente")

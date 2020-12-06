@@ -55,8 +55,7 @@ public class PessoaImpl implements PessoaInterface {
 
     @Override
     @Transactional
-    public PessoaDTO cadastraPessoa(PessoaDTO pessoaDTO) throws Exception{
-
+    public PessoaDTO cadastraPessoa(PessoaDTO pessoaDTO) throws Exception {
 
 
         PessoaDTO pessoaDTOReturn = new PessoaDTO();
@@ -66,51 +65,58 @@ public class PessoaImpl implements PessoaInterface {
             clienteEntity.setDtCadastro(pessoaDTO.getDataCadastro());
             clienteEntity.setCpfCnpj(pessoaDTO.getCpfCnpj());
             clienteEntity.setDtNascimento(pessoaDTO.getDataNascimento());
-            clienteEntity.setEmail(pessoaDTO.getEmail());
+            clienteEntity.setEmail(pessoaDTO.getEmail().toLowerCase());
             clienteEntity.setFlgEmailValido(true);
             clienteEntity.setNome(pessoaDTO.getNome());
             clienteEntity.setNrCelular(pessoaDTO.getNrCelular());
             clienteEntity.setSenha(pessoaDTO.getSenha());
             clienteEntity.setCampanha(campanhaEntity);
-            pessoaDTOReturn =  pessoaBO.parsePojoToDto(clienteJPARepository.findById(clienteJPARepository.save(clienteEntity).getIdPessoa()).orElseThrow(() -> new Exception("Não foi possivel salvar cliente")));
+            pessoaDTOReturn = pessoaBO.parsePojoToDto(clienteJPARepository.findById(clienteJPARepository.save(clienteEntity).getIdPessoa()).orElseThrow(() -> new Exception("Não foi possivel salvar cliente")));
         } else if (pessoaDTO.getTipoPessoa().equals("VENDEDOR")) {
 
-            if (Objects.isNull(pessoaDTO.getNomeNegocio()) || pessoaDTO.getNomeNegocio().isEmpty()){
+            if (Objects.isNull(pessoaDTO.getNomeNegocio()) || pessoaDTO.getNomeNegocio().isEmpty()) {
                 throw new Exception("Nome do negócio deve ser informado");
             }
-            if (Objects.isNull(pessoaDTO.getSegmentoComercial()) || pessoaDTO.getSegmentoComercial().isEmpty()){
+            if (Objects.isNull(pessoaDTO.getSegmentoComercial()) || pessoaDTO.getSegmentoComercial().isEmpty()) {
                 throw new Exception("Segmento comercial deve ser informado");
             }
             VendedorEntity vendedorEntity = new VendedorEntity();
             vendedorEntity.setDtCadastro(pessoaDTO.getDataCadastro());
             vendedorEntity.setCpfCnpj(pessoaDTO.getCpfCnpj());
             vendedorEntity.setDtNascimento(pessoaDTO.getDataNascimento());
-            vendedorEntity.setEmail(pessoaDTO.getEmail());
+            vendedorEntity.setEmail(pessoaDTO.getEmail().toLowerCase());
             vendedorEntity.setFlgEmailValido(true);
             vendedorEntity.setNome(pessoaDTO.getNome());
             vendedorEntity.setNomeNegocio(pessoaDTO.getNomeNegocio());
             vendedorEntity.setNomeSegmento(pessoaDTO.getSegmentoComercial());
             vendedorEntity.setNrCelular(pessoaDTO.getNrCelular());
             vendedorEntity.setSenha(pessoaDTO.getSenha());
-            pessoaDTOReturn =  pessoaBO.parsePojoToDto(vendedorJPARepository.findById(vendedorJPARepository.save(vendedorEntity).getIdPessoa()).orElseThrow(() -> new Exception("Não foi possivel salvar vendedor")));
+            pessoaDTOReturn = pessoaBO.parsePojoToDto(vendedorJPARepository.findById(vendedorJPARepository.save(vendedorEntity).getIdPessoa()).orElseThrow(() -> new Exception("Não foi possivel salvar vendedor")));
         }
 
-        return pessoaDTOReturn ;
+        return pessoaDTOReturn;
 
     }
 
     @Override
     public PessoaDTO consultaPorEmaileSenha(String email, String senha, String tipoPessoa) throws Exception {
 
-        if (pessoaJpa.findbyEmailIgnoreCase(email.toUpperCase()) == null){
+        ClienteEntity clienteEntity = null;
+        VendedorEntity vendedorEntity = null;
+        PessoaDTO pessoaDTO = new PessoaDTO();
+        if (tipoPessoa.compareTo("CLIENTE") == 0) {
+            clienteEntity = clienteJPARepository.findbyEmailIgnoreCaseAndSenha(email.toLowerCase(), senha);
+            pessoaDTO = pessoaBO.parsePojoToDto(clienteEntity);
+        }
+        if (tipoPessoa.compareTo("VENDEDOR") == 0) {
+            vendedorEntity = vendedorJPARepository.findbyEmailIgnoreCaseAndSenha(email, senha);
+            pessoaDTO = pessoaBO.parsePojoToDto(vendedorEntity);
+        }
+
+        if (Objects.isNull(vendedorEntity) && Objects.isNull(clienteEntity)) {
             throw new Exception("ERROR_USER_NOT_FOUND");
-        }else {
-            Object[][] pessoadto = pessoaJpa.findbyEmailIgnoreCaseAndSenha(email, senha);
-            PessoaDTO pessoaRetorno  = Interpreter.parseToPojo(pessoadto, PessoaDTO.class);
-            if (pessoaRetorno == null) throw new Exception("ERROR_WRONG_PASSWORD");
-            if (pessoaRetorno.getTipoPessoa().equals(tipoPessoa) || pessoaRetorno.getTipoPessoa().equals("AMBAS")) return pessoaRetorno;
-            if (pessoaRetorno.getTipoPessoa().equals("NENHUMA")) throw new Exception("ERROR_INVALID_TIPO_PESSOA");
-            return null;
+        } else {
+            return pessoaDTO;
         }
     }
 
@@ -123,7 +129,7 @@ public class PessoaImpl implements PessoaInterface {
     @Override
     public PessoaEntity consutaClientePorEmail(String email) {
 
-        return pessoaJpa.findbyEmailIgnoreCase(email.toUpperCase());
+        return pessoaJpa.findbyEmailIgnoreCase(email);
     }
 
     @Override
@@ -154,8 +160,8 @@ public class PessoaImpl implements PessoaInterface {
                 "  <td width=\"600\" valign=\"top\">Olá, " + pessoaDTO.getNome() + ", bem vindo ao Migrou! </td>\n" +
                 "  <td width=\"480\" valign=\"top\"></td>\n" +
                 " </tr>\n" +
-                " <tr></tr>"+
-                " <tr></tr>"+
+                " <tr></tr>" +
+                " <tr></tr>" +
                 " <tr>\n" +
                 "  <td width=\"120\" valign=\"top\"></td>\n" +
                 "  <td width=\"480\" valign=\"top\">Por favor, clique no link abaixo para ativar seu cadastro:</td>\n" +
@@ -187,7 +193,7 @@ public class PessoaImpl implements PessoaInterface {
 
             Transport.send(msg);
 
-        }catch (Exception e ) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -195,10 +201,12 @@ public class PessoaImpl implements PessoaInterface {
     @Override
     public void AtivaViaEmail(PessoaDTO pessoaDTO) throws Exception {
 
-        PessoaEntity pessoaEntity  = pessoaBO.parseDtoToPojo(pessoaDTO);
+        PessoaEntity pessoaEntity = pessoaBO.parseDtoToPojo(pessoaDTO);
         pessoaEntity.setFlgEmailValido(true);
         pessoaJpa.save(pessoaEntity);
 
     }
+
+
 }
 

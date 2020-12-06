@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,13 +18,15 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class    LoginDTO implements Serializable {
+public class  LoginDTO implements Serializable {
 
     private static final long serialVersionUID = 0L;
 
-    private String email;
+    @NotEmpty
+    private String username;
 
-    private String senha;
+    @NotEmpty
+    private String password;
 
     private String tipoPessoa;
 

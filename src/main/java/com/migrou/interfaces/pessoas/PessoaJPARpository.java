@@ -17,34 +17,27 @@ import javax.transaction.Transactional;
 
 public interface PessoaJPARpository extends JpaRepository<PessoaEntity, UUID>{
 
-	@Query("select p FROM PessoaEntity p where Upper(p.email) = ?1")
+	@Query("select p FROM PessoaEntity p where LOWER(p.email) = ?1")
 	PessoaEntity findbyEmailIgnoreCase(String email);
 
-	@Query(value = "select " +
-			"cast(p.ID_PESSOA as VARCHAR(50)) id_pessoa, " +
-			"p.NOME ," +
-			"p.EMAIL ," +
-			"p.SENHA, " +
-			"p.CPFCNPJ ," +
-			"p.DT_CADASTRO, " +
-			"p.DT_NASCIMENTO, " +
-			"p.NR_CELULAR, " +
-			"p.EMAIL_VALIDO, " +
-			"p.FOTO ," +
-			"case " +
-			"when v.ID_PESSOA is not null then 'VENDEDOR' " +
-			"when c.ID_PESSOA is not null then 'CLIENTE' " +
-			"when v.ID_PESSOA is not null and c.ID_PESSOA is not null then 'AMBOS' " +
-			"when p.id_pessoa is not null and v.ID_PESSOA is null and c.ID_PESSOA is null then 'NENHUMA'  " +
-			"end as TIPOPESSOA , " +
-			"COALESCE (v.segmento, '0' ) as segmentoComercial, " +
-			"COALESCE (v.nome_negocio, '0' ) as nomeNegocio " +
-			"from " +
-			"PESSOA p " +
-			"left outer join VENDEDOR v on p.ID_PESSOA = v.ID_PESSOA " +
-			"left outer join CLIENTE c on p.ID_PESSOA = c.ID_PESSOA " +
-			" where UPPER(p.email) = UPPER(?1) and p.senha = ?2 ", nativeQuery = true)
-	Object[][] findbyEmailIgnoreCaseAndSenha(String email, String senha);
+	@Query("SELECT new com.migrou.types.dto.PessoaDTO( " +
+			"p.idPessoa, 		" +
+			"p.nome ,			" +
+			"p.email ,			" +
+			"p.senha, 			" +
+			"p.cpfCnpj ,		" +
+			"p.dtCadastro, 		" +
+			"p.dtNascimento,	" +
+			"p.nrCelular, 		" +
+			"p.flgEmailValido, 	" +
+			"'',  			" +
+			"'', " +
+			"'', " +
+			"'') " +
+			"FROM 				" +
+			"PessoaEntity p  " +
+			"WHERE p.email = :email AND p.senha = :senha ")
+	PessoaDTO findbyEmailIgnoreCaseAndSenha(@Param("email") String email, @Param("senha") String senha);
 
 	@Query("select p FROM PessoaEntity p where p.nome like %?1%")
 	List<PessoaEntity> findbyLikeNomeIgnoreCase(String nome);

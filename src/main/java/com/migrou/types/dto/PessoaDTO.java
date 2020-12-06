@@ -18,13 +18,13 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class PessoaDTO {
+public class PessoaDTO implements Serializable {
 
     /**
      * não incluir campos novos pois impacta no login
      */
 
-    private String id;
+    private UUID id;
     
     private String nome;
     

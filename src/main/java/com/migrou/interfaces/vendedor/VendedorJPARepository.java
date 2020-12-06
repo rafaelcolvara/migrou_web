@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.migrou.types.entity.ClienteEntity;
 import com.migrou.types.entity.VendedorEntity;
+import org.springframework.data.jpa.repository.Query;
 
 public interface VendedorJPARepository extends JpaRepository<VendedorEntity, UUID> {
 	
@@ -17,5 +18,9 @@ public interface VendedorJPARepository extends JpaRepository<VendedorEntity, UUI
 	List<VendedorEntity> findByEmail(String email);
 	List<VendedorEntity> findAll();
 	Optional<VendedorEntity> findByIdPessoa(UUID idPessoa);
+
+	@Query("SELECT p FROM VendedorEntity p where p.email = :email and p.senha = :senha")
+	VendedorEntity findbyEmailIgnoreCaseAndSenha(String email, String senha);
+
 
 }

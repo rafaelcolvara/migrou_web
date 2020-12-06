@@ -1,35 +1,27 @@
 package com.migrou.controller.pessoa;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
-import com.migrou.types.dto.LoginDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.migrou.implementacoes.pessoas.PessoaImpl;
 import com.migrou.implementacoes.pessoas.bo.PessoaBO;
 import com.migrou.interfaces.contaCorrente.ContaCorrenteInterface;
 import com.migrou.interfaces.pessoas.PessoaJPARpository;
+import com.migrou.implementacoes.pessoas.*;
+import com.migrou.types.dto.LoginDTO;
 import com.migrou.types.dto.PessoaDTO;
 import com.migrou.types.dto.PessoaFotoDTO;
 import com.migrou.types.entity.ClienteEntity;
 import com.migrou.types.entity.PessoaEntity;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 
 @RestController
@@ -109,7 +101,8 @@ public class PessoasController {
     public ResponseEntity<PessoaDTO> login(@RequestBody final LoginDTO loginDTO) {
         PessoaDTO pessoaDTO;
         try {
-            pessoaDTO = pessoaService.consultaPorEmaileSenha(loginDTO.getEmail(), loginDTO.getSenha(), loginDTO.getTipoPessoa());
+            pessoaDTO = pessoaService.consultaPorEmaileSenha(loginDTO.getUsername(), loginDTO.getPassword(), loginDTO.getTipoPessoa());
+
             if (Objects.isNull(pessoaDTO) ) {
                 throw new Exception("Nao encontrado");
             }
