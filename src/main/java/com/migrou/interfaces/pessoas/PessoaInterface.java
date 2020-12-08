@@ -21,5 +21,6 @@ public interface PessoaInterface {
     PessoaFotoDTO consultaFotoPefilPorID(UUID idPessoa) throws Exception;
     void EnviaEmail(PessoaDTO pessoaDTO) throws AddressException, MessagingException, IOException;
 	void AtivaViaEmail(PessoaDTO pessoaDTO) throws Exception;
+	PessoaDTO getPessoaByEmail(String email);
 
 }

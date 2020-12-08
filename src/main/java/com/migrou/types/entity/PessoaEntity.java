@@ -72,4 +72,5 @@ public class PessoaEntity implements Serializable{
 	@Column(name = "NR_CELULAR")
     private String nrCelular;
 
+
 }

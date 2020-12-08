@@ -1,9 +1,8 @@
 package com.migrou.implementacoes.auth;
 
-import com.migrou.interfaces.pessoas.PessoaJPARpository;
-import com.migrou.types.entity.PessoaEntity;
+import com.migrou.implementacoes.pessoas.PessoaImpl;
+import com.migrou.types.dto.PessoaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -21,16 +20,25 @@ import java.util.Optional;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    PessoaJPARpository pessoaJPARpository;
+    PessoaImpl pessoaService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        BCryptPasswordEncoder encoder = passwordEncoder();
-        PessoaEntity pessoaEntity = Optional.ofNullable(pessoaJPARpository.findbyEmailIgnoreCase(username)).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        List<GrantedAuthority> authorityAdminList = AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN");
-        List<GrantedAuthority> authorityUserList = AuthorityUtils.createAuthorityList("ROLE_USER");
 
-        return new User(pessoaEntity.getEmail(),encoder.encode(pessoaEntity.getSenha()), authorityAdminList );
+        List<GrantedAuthority> authority = null;
+        System.out.println("PASSO loadUserByUsername");
+        BCryptPasswordEncoder encoder = passwordEncoder();
+        PessoaDTO pessoaDTO = Optional.ofNullable(pessoaService.getPessoaByEmail(username)).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (pessoaDTO.getTipoPessoa().compareTo("AMBAS")==0) {
+            authority = AuthorityUtils.createAuthorityList("ROLE_VENDEDOR", "ROLE_CLIENTE");
+        } else if (pessoaDTO.getTipoPessoa().compareTo("CLIENTE")==0) {
+            authority = AuthorityUtils.createAuthorityList("ROLE_CLIENTE");
+        } else if (pessoaDTO.getTipoPessoa().compareTo("VENDEDOR")==0){
+            authority = AuthorityUtils.createAuthorityList("ROLE_VENDEDOR");
+        }
+
+        return new User(pessoaDTO.getEmail(),encoder.encode(pessoaDTO.getSenha()), authority);
 
     }
 
@@ -38,4 +46,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }

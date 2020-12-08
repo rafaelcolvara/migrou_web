@@ -206,7 +206,34 @@ public class PessoaImpl implements PessoaInterface {
         pessoaJpa.save(pessoaEntity);
 
     }
+    @Override
+    public PessoaDTO getPessoaByEmail(String email) {
+        ClienteEntity clienteEntity=null;
+        VendedorEntity vendedorEntity=null;
+        PessoaEntity pessoaEntity = pessoaJpa.findbyEmailIgnoreCase(email);
+        try {
+            clienteEntity = clienteJPARepository.findByIdPessoa(pessoaEntity.getIdPessoa());
+        } catch(Exception e)
+        {
+            clienteEntity = null;
+        }
+        try {
+            vendedorEntity = vendedorJPARepository.findById(pessoaEntity.getIdPessoa()).orElseThrow(null);
+        } catch(Exception e){
+            vendedorEntity = null;
+        }
+        PessoaDTO  pessoaDTO = new PessoaDTO();
+        if (!Objects.isNull(clienteEntity)) {
+            pessoaDTO = pessoaBO.parsePojoToDto(clienteEntity);
+        }
+        if (!Objects.isNull(vendedorEntity)){
+            pessoaDTO = pessoaBO.parsePojoToDto(vendedorEntity);
+        }
+        if (!Objects.isNull(vendedorEntity) && !Objects.isNull(clienteEntity) )
+            pessoaDTO.setTipoPessoa("AMBAS");
 
+        return pessoaDTO;
 
+    }
 }
 

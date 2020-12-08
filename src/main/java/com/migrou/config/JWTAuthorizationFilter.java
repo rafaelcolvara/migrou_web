@@ -1,9 +1,12 @@
 package com.migrou.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.migrou.implementacoes.auth.CustomUserDetailsService;
+import com.migrou.types.dto.LoginDTO;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +28,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager,
                                   CustomUserDetailsService customUserDetailsService) {
         super(authenticationManager);
+        System.out.println("PASSO JWTAuthorizationFilter - construtor");
         this.customUserDetailsService = customUserDetailsService;
     }
 
@@ -32,7 +36,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
-
+        System.out.println("PASSO doFilterInternal");
         String header = request.getHeader(HEADER_STRING);
         if (header==null || !header.startsWith(TOKEN_PREFIX)){
             chain.doFilter(request, response);
@@ -44,6 +48,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(HttpServletRequest request) {
+        System.out.println("PASSO getAuthenticationToken");
+        LoginDTO loginDTO=null;
+
         String token = request.getHeader(HEADER_STRING);
         if (token == null) return null;
         String username = Jwts.parser()
@@ -52,9 +59,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 .getBody()
                 .getSubject();
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-
         return username !=null ? new UsernamePasswordAuthenticationToken(username, null, userDetails.getAuthorities()) : null;
     }
+
 
 }
 

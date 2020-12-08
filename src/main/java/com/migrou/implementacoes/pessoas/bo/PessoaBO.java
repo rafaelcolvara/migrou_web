@@ -33,6 +33,22 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaDto.setNrCelular(pessoaEntity.getNrCelular());
         return pessoaDto;
     }
+    public PessoaDTO parsePojoToDto(ClienteEntity pessoaEntity) {
+        PessoaDTO pessoaDto = new PessoaDTO();
+        pessoaDto.setCpfCnpj(pessoaEntity.getCpfCnpj());
+        pessoaDto.setDataCadastro(pessoaEntity.getDtCadastro());
+        pessoaDto.setEmail(pessoaEntity.getEmail());
+        pessoaDto.setNome(pessoaEntity.getNome());
+        pessoaDto.setId(UUID.fromString(pessoaEntity.getIdPessoa().toString()));
+        pessoaDto.setSenha(pessoaEntity.getSenha());
+        pessoaDto.setDataNascimento(pessoaEntity.getDtNascimento());
+        pessoaDto.setUrlFoto(pessoaEntity.getUrlFoto());
+        pessoaDto.setFlgEmailValido(pessoaEntity.getFlgEmailValido());
+        pessoaDto.setNrCelular(pessoaEntity.getNrCelular());
+        pessoaDto.setTipoPessoa("CLIENTE");
+        return pessoaDto;
+    }
+
     public PessoaDTO parsePojoToDto(VendedorEntity pessoaEntity) {
         PessoaDTO pessoaDto = new PessoaDTO();
         pessoaDto.setCpfCnpj(pessoaEntity.getCpfCnpj());
@@ -47,6 +63,7 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaDto.setUrlFoto(pessoaEntity.getUrlFoto());
         pessoaDto.setFlgEmailValido(pessoaEntity.getFlgEmailValido());
         pessoaDto.setNrCelular(pessoaEntity.getNrCelular());
+        pessoaDto.setTipoPessoa("CLIENTE");
         return pessoaDto;
     }
 

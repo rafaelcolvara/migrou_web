@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+        System.out.println("PASSO configure - Security Config");
         http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
@@ -47,7 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        System.out.println("PASSO configure(AuthenticationManagerBuilder auth)");
         auth.userDetailsService(customUserDetailsService);
+
 
     }
 }
