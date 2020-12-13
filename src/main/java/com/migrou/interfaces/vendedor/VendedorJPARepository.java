@@ -22,5 +22,9 @@ public interface VendedorJPARepository extends JpaRepository<VendedorEntity, UUI
 	@Query("SELECT p FROM VendedorEntity p where p.email = :email and p.senha = :senha")
 	VendedorEntity findbyEmailIgnoreCaseAndSenha(String email, String senha);
 
+	@Query("SELECT p FROM VendedorEntity p where p.email = :email ")
+	VendedorEntity findbyEmailIgnoreCase(String email);
+
+
 
 }

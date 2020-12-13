@@ -20,25 +20,6 @@ public interface PessoaJPARpository extends JpaRepository<PessoaEntity, UUID>{
 	@Query("select p FROM PessoaEntity p where LOWER(p.email) = ?1")
 	PessoaEntity findbyEmailIgnoreCase(String email);
 
-	@Query("SELECT new com.migrou.types.dto.PessoaDTO( " +
-			"p.idPessoa, 		" +
-			"p.nome ,			" +
-			"p.email ,			" +
-			"p.senha, 			" +
-			"p.cpfCnpj ,		" +
-			"p.dtCadastro, 		" +
-			"p.dtNascimento,	" +
-			"p.nrCelular, 		" +
-			"p.flgEmailValido, 	" +
-			"'',  			" +
-			"'', " +
-			"'', " +
-			"'') " +
-			"FROM 				" +
-			"PessoaEntity p  " +
-			"WHERE p.email = :email AND p.senha = :senha ")
-	PessoaDTO findbyEmailIgnoreCaseAndSenha(@Param("email") String email, @Param("senha") String senha);
-
 	@Query("select p FROM PessoaEntity p where p.nome like %?1%")
 	List<PessoaEntity> findbyLikeNomeIgnoreCase(String nome);
 

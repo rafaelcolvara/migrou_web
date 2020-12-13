@@ -33,7 +33,7 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "idPessoa")
 @Getter
 @Setter
-public class PessoaEntity implements Serializable{
+public class PessoaEntity implements Serializable {
 	
 	@Id
     @GeneratedValue(generator = "UUID")

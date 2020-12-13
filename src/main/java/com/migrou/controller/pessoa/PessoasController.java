@@ -2,13 +2,10 @@ package com.migrou.controller.pessoa;
 
 import com.migrou.implementacoes.pessoas.PessoaImpl;
 import com.migrou.implementacoes.pessoas.bo.PessoaBO;
-import com.migrou.interfaces.contaCorrente.ContaCorrenteInterface;
 import com.migrou.interfaces.pessoas.PessoaJPARpository;
-import com.migrou.implementacoes.pessoas.*;
 import com.migrou.types.dto.LoginDTO;
 import com.migrou.types.dto.PessoaDTO;
 import com.migrou.types.dto.PessoaFotoDTO;
-import com.migrou.types.entity.ClienteEntity;
 import com.migrou.types.entity.PessoaEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,9 +34,6 @@ public class PessoasController {
 
     @Autowired
     PessoaImpl pessoaService;
-    
-    @Autowired
-    ContaCorrenteInterface clienteVendedor;
 
     @Autowired
     PessoaBO pessoaBO;
@@ -96,22 +92,7 @@ public class PessoasController {
 		return new ResponseEntity<PessoaDTO>(pessoaDTO, HttpStatus.OK);
 	}
 
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Login via email e senha ")
-    public ResponseEntity<PessoaDTO> login(@RequestBody final LoginDTO loginDTO) {
-        PessoaDTO pessoaDTO;
-        try {
-            pessoaDTO = pessoaService.consultaPorEmaileSenha(loginDTO.getUsername(), loginDTO.getPassword(), loginDTO.getTipoPessoa());
 
-            if (Objects.isNull(pessoaDTO) ) {
-                throw new Exception("Nao encontrado");
-            }
-        } catch (Exception e)
-        {
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<PessoaDTO>(pessoaDTO, HttpStatus.OK);
-    }
     @PatchMapping(value = "/foto" )
     public ResponseEntity<String> AtualizaFoto(@RequestBody PessoaFotoDTO pessoaDTO){
     	

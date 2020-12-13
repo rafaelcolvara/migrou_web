@@ -99,17 +99,17 @@ public class PessoaImpl implements PessoaInterface {
     }
 
     @Override
-    public PessoaDTO consultaPorEmaileSenha(String email, String senha, String tipoPessoa) throws Exception {
+    public PessoaDTO consultaPorEmaileTipoPessoa(String email, String tipoPessoa) throws Exception {
 
         ClienteEntity clienteEntity = null;
         VendedorEntity vendedorEntity = null;
         PessoaDTO pessoaDTO = new PessoaDTO();
         if (tipoPessoa.compareTo("CLIENTE") == 0) {
-            clienteEntity = clienteJPARepository.findbyEmailIgnoreCaseAndSenha(email.toLowerCase(), senha);
+            clienteEntity = Optional.of(clienteJPARepository.findbyEmailIgnoreCase(email.toLowerCase())).orElseThrow(()-> new Exception("Cliente não existe"));
             pessoaDTO = pessoaBO.parsePojoToDto(clienteEntity);
         }
         if (tipoPessoa.compareTo("VENDEDOR") == 0) {
-            vendedorEntity = vendedorJPARepository.findbyEmailIgnoreCaseAndSenha(email, senha);
+            vendedorEntity = Optional.of(vendedorJPARepository.findbyEmailIgnoreCase(email.toLowerCase())).orElseThrow(()-> new Exception("Vendedor Não existe"));
             pessoaDTO = pessoaBO.parsePojoToDto(vendedorEntity);
         }
 
@@ -231,6 +231,7 @@ public class PessoaImpl implements PessoaInterface {
         }
         if (!Objects.isNull(vendedorEntity) && !Objects.isNull(clienteEntity) )
             pessoaDTO.setTipoPessoa("AMBAS");
+
 
         return pessoaDTO;
 

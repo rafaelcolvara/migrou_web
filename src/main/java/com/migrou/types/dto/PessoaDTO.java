@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.Size;
 
@@ -52,5 +53,7 @@ public class PessoaDTO implements Serializable {
     private String segmentoComercial;
 
     private String nomeNegocio;
+
+    private String token;
 
 }
