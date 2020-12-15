@@ -56,7 +56,7 @@ public class UsuarioController {
 
             return ResponseEntity.ok().body(pessoaDTO);
         } catch (AuthenticationException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("AUTHENTICATION_ERROR");
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_GATEWAY);
         }
