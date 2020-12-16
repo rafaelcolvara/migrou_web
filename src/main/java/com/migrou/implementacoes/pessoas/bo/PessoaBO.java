@@ -48,7 +48,6 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaDto.setTipoPessoa("CLIENTE");
         return pessoaDto;
     }
-
     public PessoaDTO parsePojoToDto(VendedorEntity pessoaEntity) {
         PessoaDTO pessoaDto = new PessoaDTO();
         pessoaDto.setCpfCnpj(pessoaEntity.getCpfCnpj());
