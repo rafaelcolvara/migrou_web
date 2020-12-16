@@ -112,7 +112,11 @@ public class PessoaImpl implements PessoaInterface {
         System.out.println("PASSO 2");
         if (tipoPessoa.compareTo("VENDEDOR") == 0) {
             System.out.println("PASSO 2.1");
-            vendedorEntity = Optional.of(vendedorJPARepository.findbyEmailIgnoreCase(email.toLowerCase())).orElseThrow(()-> new Exception("Vendedor Não existe"));
+            try {
+                vendedorEntity = Optional.of(vendedorJPARepository.findbyEmailIgnoreCase(email.toLowerCase())).orElseThrow(() -> new Exception("Vendedor Não existe"));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             System.out.println("PASSO 2.2");
             pessoaDTO = pessoaBO.parsePojoToDto(vendedorEntity);
             System.out.println("PASSO 2.3");
