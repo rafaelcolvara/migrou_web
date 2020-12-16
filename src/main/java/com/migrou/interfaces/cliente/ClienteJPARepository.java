@@ -26,5 +26,4 @@ public interface ClienteJPARepository extends JpaRepository<ClienteEntity, UUID>
 	ClienteEntity findbyEmailIgnoreCase(String email);
 
 
-
 }
