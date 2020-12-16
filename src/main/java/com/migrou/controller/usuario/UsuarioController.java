@@ -52,7 +52,7 @@ public class UsuarioController {
             String token = tokenService.gerarToken(authentication);
             System.out.println("Vai chamar a consulta de usuario:" + loginDTO.getUsername() + " - " + loginDTO.getTipoPessoa());
             PessoaDTO pessoaDTO = pessoaInterface.consultaPorEmaileTipoPessoa(loginDTO.getUsername(), loginDTO.getTipoPessoa());
-
+            System.out.println("buscou o cara: " + pessoaDTO.getNome());
 
             pessoaDTO.setToken(token);
 
