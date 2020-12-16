@@ -22,8 +22,8 @@ public interface ClienteJPARepository extends JpaRepository<ClienteEntity, UUID>
 	@Query("SELECT p FROM ClienteEntity p where p.email = :email and p.senha = :senha")
 	ClienteEntity findbyEmailIgnoreCaseAndSenha(@Param("email") String email, @Param("senha") String senha);
 
-	@Query("SELECT p FROM ClienteEntity p where p.email = :email ")
-	ClienteEntity findbyEmailIgnoreCase(@Param("email") String email);
+	@Query("SELECT p FROM ClienteEntity p where p.email = ?1 ")
+	ClienteEntity findbyEmailIgnoreCase(String email);
 
 
 
