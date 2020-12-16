@@ -104,16 +104,19 @@ public class PessoaImpl implements PessoaInterface {
         ClienteEntity clienteEntity = null;
         VendedorEntity vendedorEntity = null;
         PessoaDTO pessoaDTO = new PessoaDTO();
+        System.out.println("PASSO 1");
         if (tipoPessoa.compareTo("CLIENTE") == 0) {
             clienteEntity = Optional.of(clienteJPARepository.findbyEmailIgnoreCase(email.toLowerCase())).orElseThrow(()-> new Exception("Cliente não existe"));
             pessoaDTO = pessoaBO.parsePojoToDto(clienteEntity);
         }
+        System.out.println("PASSO 2");
         if (tipoPessoa.compareTo("VENDEDOR") == 0) {
             vendedorEntity = Optional.of(vendedorJPARepository.findbyEmailIgnoreCase(email.toLowerCase())).orElseThrow(()-> new Exception("Vendedor Não existe"));
             pessoaDTO = pessoaBO.parsePojoToDto(vendedorEntity);
         }
-
+        System.out.println("PASSO 3");
         if (Objects.isNull(vendedorEntity) && Objects.isNull(clienteEntity)) {
+            System.out.println("PASSO 4");
             throw new Exception("ERROR_USER_NOT_FOUND");
         } else {
             return pessoaDTO;
