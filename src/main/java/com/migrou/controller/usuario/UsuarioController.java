@@ -50,8 +50,10 @@ public class UsuarioController {
 
             Authentication authentication = authenticationManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authentication);
-
+            System.out.println("Vai chamar a consulta de usuario:" + loginDTO.getUsername() + " - " + loginDTO.getTipoPessoa());
             PessoaDTO pessoaDTO = pessoaInterface.consultaPorEmaileTipoPessoa(loginDTO.getUsername(), loginDTO.getTipoPessoa());
+
+
             pessoaDTO.setToken(token);
 
             return ResponseEntity.ok().body(pessoaDTO);
