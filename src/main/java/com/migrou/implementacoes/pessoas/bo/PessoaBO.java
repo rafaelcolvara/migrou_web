@@ -63,7 +63,7 @@ public class PessoaBO<T extends PessoaEntity> {
         pessoaDto.setUrlFoto(pessoaEntity.getUrlFoto());
         pessoaDto.setFlgEmailValido(pessoaEntity.getFlgEmailValido());
         pessoaDto.setNrCelular(pessoaEntity.getNrCelular());
-        pessoaDto.setTipoPessoa("CLIENTE");
+        pessoaDto.setTipoPessoa("VENDEDOR");
         return pessoaDto;
     }
 
