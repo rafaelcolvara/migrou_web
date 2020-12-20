@@ -1,15 +1,11 @@
 package com.migrou.config;
 
 import com.migrou.implementacoes.auth.TokenService;
-import com.migrou.interfaces.pessoas.PessoaInterface;
 import com.migrou.interfaces.usuario.UsuarioJPA;
-import com.migrou.types.dto.PessoaDTO;
 import com.migrou.types.entity.Usuario;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sun.security.x509.OtherName;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

@@ -65,10 +65,10 @@ public class VendedorController {
 	
 	@GetMapping(value = "{idVendedor}/buscaClientes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta todos os Clientes do Vendedor fornecido")
-    public ResponseEntity<VendedorListaClientesDTO> BuscaClientesDoVendedor(@PathVariable("idVendedor") UUID idVendedor ) {
+    public ResponseEntity<VendedorListaClientesDTO> BuscaClientesDoVendedor(@PathVariable("idVendedor") String usernameVendedor ) {
 		VendedorListaClientesDTO vendedorListaClientesDTO ;
 		try{
-			vendedorListaClientesDTO = vendedorCliente.buscaClientesDoVendedor(idVendedor);
+			vendedorListaClientesDTO = vendedorCliente.buscaClientesDoVendedor(usernameVendedor);
 		}catch (Exception e)
 		{
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -79,10 +79,10 @@ public class VendedorController {
 
 	@GetMapping(value = "/cliente/{idCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta todos os Vendedores do Cliente Fornecido")
-	public ResponseEntity<ClienteListaVendedoresDTO> BuscaVendedorDoCliente(@PathVariable("idCliente") UUID idCliente ) {
+	public ResponseEntity<ClienteListaVendedoresDTO> BuscaVendedorDoCliente(@PathVariable("idCliente") String usernameCliente ) {
 		ClienteListaVendedoresDTO cliente;
 		try {
-			cliente = vendedorCliente.buscaVendedoresDoCliente(idCliente);
+			cliente = vendedorCliente.buscaVendedoresDoCliente(usernameCliente);
 		}catch (Exception e){
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}

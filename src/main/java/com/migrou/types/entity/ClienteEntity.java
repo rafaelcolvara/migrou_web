@@ -11,17 +11,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name ="CLIENTE_TESTE")
-@EqualsAndHashCode
-public class ClienteTesteEntity {
+@Table(name ="CLIENTE")
+@EqualsAndHashCode(of = {"username"})
+public class ClienteEntity {
 
     @Id
     @Column(name = "usuario_id")
     private String username;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "usuario_id")
+    @PrimaryKeyJoinColumn
     private Usuario usuario;
 
     @ManyToOne
@@ -31,7 +30,7 @@ public class ClienteTesteEntity {
     @OneToMany(
             mappedBy = "cliente",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = false
     )
     private List<ContaCorrenteEntity> contaCorrenteCliente;
 
@@ -39,9 +38,6 @@ public class ClienteTesteEntity {
 
     @Column(name = "NOME", nullable = false)
     private String nome;
-
-    @Column(name = "SENHA", nullable = false)
-    private String senha;
 
     @Column(name = "CPFCNPJ", length = 14, scale = 0)
     private Long cpfCnpj;

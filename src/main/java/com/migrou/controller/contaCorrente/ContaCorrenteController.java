@@ -8,7 +8,6 @@ import com.migrou.implementacoes.pessoas.vendedor.VendedorClienteImpl;
 import com.migrou.types.dto.ClienteDashDTO;
 import com.migrou.types.dto.UltimoResgateDTO;
 import com.migrou.types.dto.VendedorListaClientesDTO;
-import com.migrou.types.entity.VendedorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,9 +52,9 @@ public class ContaCorrenteController {
 
     @PatchMapping(value = "resgate/vendedor/{idVendedor}/cliente/{idCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Realiza resgate")
-    public ResponseEntity<?> RealizaResgate(@PathVariable("idVendedor") final UUID idVendedor, @PathVariable("idCliente") final UUID idCliente) {
+    public ResponseEntity<?> RealizaResgate(@PathVariable("idVendedor") final String usernameVendedor, @PathVariable("idCliente") final String usernameCliente) {
         try {
-            return new ResponseEntity<ContaCorrenteDTO>(contacorrenteService.realizaResgate(idCliente, idVendedor), HttpStatus.OK);
+            return new ResponseEntity<ContaCorrenteDTO>(contacorrenteService.realizaResgate(usernameCliente, usernameVendedor), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -73,11 +72,11 @@ public class ContaCorrenteController {
 
     @GetMapping(value = "/{idVendedor}/DashCliente/{idCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Consulta Dashboard do cliente")
-    public ResponseEntity<?> ConsultaDashBoardCliente(@PathVariable("idVendedor") UUID idVendedor, @PathVariable("idCliente") final UUID idCliente) {
+    public ResponseEntity<?> ConsultaDashBoardCliente(@PathVariable("idVendedor") String usernameVendedor, @PathVariable("idCliente") final String usernameCliente) {
 
         try {
 
-            return new ResponseEntity<ClienteDashDTO>(contacorrenteService.buscaDashCliente(idCliente, idVendedor), HttpStatus.OK);
+            return new ResponseEntity<ClienteDashDTO>(contacorrenteService.buscaDashCliente(usernameCliente, usernameVendedor), HttpStatus.OK);
 
         } catch (Exception e) {
 
@@ -88,14 +87,14 @@ public class ContaCorrenteController {
 
     @GetMapping(value = "/{idVendedor}/DashTodosClientes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Consulta todos os clientes do vendedor contendo informações de consumo de compras para dashboard")
-    public ResponseEntity<?> ConsultaListaDashCliente(@PathVariable("idVendedor") UUID idVendedor) {
+    public ResponseEntity<?> ConsultaListaDashCliente(@PathVariable("idVendedor") String usernameVendedor) {
 
         try {
             List<ClienteDashDTO> ListaClientesRetorno =  new ArrayList<>();
-            VendedorListaClientesDTO listaClienteEntity = vendedorCliente.buscaClientesDoVendedor(idVendedor);
+            VendedorListaClientesDTO listaClienteEntity = vendedorCliente.buscaClientesDoVendedor(usernameVendedor);
             listaClienteEntity.getClientes().forEach(x -> {
                 try {
-                    ListaClientesRetorno.add(contacorrenteService.buscaDashCliente(x.getIdCliente(), idVendedor));
+                    ListaClientesRetorno.add(contacorrenteService.buscaDashCliente(x.getUsername(), usernameVendedor));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -112,11 +111,11 @@ public class ContaCorrenteController {
 
     @GetMapping(value = "/{idVendedor}/BuscaUltimosResgates", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Busca todos os resgates dos clientes do vendedor informado")
-    public ResponseEntity<?> ConsultaResgatesDosSeusCliente(@PathVariable("idVendedor") UUID idVendedor) {
+    public ResponseEntity<?> ConsultaResgatesDosSeusCliente(@PathVariable("idVendedor") String usernameVendedor) {
 
         try {
 
-            return new ResponseEntity<List<UltimoResgateDTO>>(contacorrenteService.buscaUltimoResgateDosClientes(idVendedor), HttpStatus.OK);
+            return new ResponseEntity<List<UltimoResgateDTO>>(contacorrenteService.buscaUltimoResgateDosClientes(usernameVendedor), HttpStatus.OK);
 
         } catch (Exception e) {
 

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface VendedorClienteInterface {
 
-    VendedorListaClientesDTO buscaClientesDoVendedor(UUID idVendedor) throws Exception;
+    VendedorListaClientesDTO buscaClientesDoVendedor(String usernameVendedor) throws Exception;
 
-    ClienteListaVendedoresDTO buscaVendedoresDoCliente(UUID idCliente) throws Exception;
+    ClienteListaVendedoresDTO buscaVendedoresDoCliente(String usernameCliente) throws Exception;
 }

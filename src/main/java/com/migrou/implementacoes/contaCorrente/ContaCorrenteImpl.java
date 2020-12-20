@@ -1,28 +1,28 @@
 package com.migrou.implementacoes.contaCorrente;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-
-import javax.transaction.Transactional;
-
 import com.migrou.implementacoes.campanha.CampanhaBO;
+import com.migrou.implementacoes.pessoas.bo.ClienteBO;
+import com.migrou.implementacoes.pessoas.bo.VendedorBO;
 import com.migrou.interfaces.campanha.CampanhaJPARepository;
 import com.migrou.interfaces.cliente.ClienteJPARepository;
+import com.migrou.interfaces.contaCorrente.ContaCorrenteInterface;
+import com.migrou.interfaces.contaCorrente.ContaCorrenteJPARepository;
 import com.migrou.interfaces.vendedor.VendedorJPARepository;
 import com.migrou.types.dto.ClienteDashDTO;
+import com.migrou.types.dto.ContaCorrenteDTO;
 import com.migrou.types.dto.UltimoResgateDTO;
-import com.migrou.types.entity.*;
+import com.migrou.types.entity.CampanhaEntity;
+import com.migrou.types.entity.ClienteEntity;
+import com.migrou.types.entity.ContaCorrenteEntity;
+import com.migrou.types.entity.VendedorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.migrou.implementacoes.pessoas.bo.ClienteBO;
-import com.migrou.implementacoes.pessoas.bo.VendedorBO;
-import com.migrou.interfaces.contaCorrente.ContaCorrenteJPARepository;
-import com.migrou.interfaces.contaCorrente.ContaCorrenteInterface;
-import com.migrou.types.dto.ContaCorrenteDTO;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service("ContaCorrenteService")
 public class ContaCorrenteImpl implements ContaCorrenteInterface {
@@ -65,7 +65,7 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 			throw new Exception("Informe o vendedor ou cliente");
 		}
 
-		if (Objects.isNull(contacorrente.getCliente().getIdCliente()) || Objects.isNull(contacorrente.getVendedor().getIdVendedor()))
+		if (Objects.isNull(contacorrente.getCliente().getUsername()) || Objects.isNull(contacorrente.getVendedor().getUsername()))
 			throw new Exception("informe o codigo do vendedor ou cliente");
 
 		if (Objects.isNull(contacorrente.getValorLancamento()))
@@ -74,10 +74,10 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 		if (Objects.isNull(contacorrente.getDtLancamento()))
 			contacorrente.setDtLancamento(dataLocal.getTime());
 
-		validaLancamento(contacorrente.getCliente().getIdCliente(), contacorrente.getVendedor().getIdVendedor());
+		validaLancamento(contacorrente.getCliente().getUsername(), contacorrente.getVendedor().getUsername());
 
-		vendedorEntity = vendedorJPARepository.findById(contacorrente.getVendedor().getIdVendedor()).orElseThrow(() -> new Exception("Não encontrado"));
-		clienteEntity = clienteJPARepository.findByIdPessoa(contacorrente.getCliente().getIdCliente());
+		vendedorEntity = vendedorJPARepository.findById(contacorrente.getVendedor().getUsername()).orElseThrow(() -> new Exception("Não encontrado"));
+		clienteEntity = clienteJPARepository.findByUsername(contacorrente.getCliente().getUsername());
 
 		if (Objects.isNull(clienteEntity.getCampanha()))
 			throw new Exception("Atribua uma campanha ao cliente antes de realizar lançamentos");
@@ -96,12 +96,12 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 	}
 
 	@Override
-	public ContaCorrenteDTO realizaResgate(UUID idCliente, UUID idVendedor) throws Exception {
+	public ContaCorrenteDTO realizaResgate(String usernameCliente, String usernameVendedor) throws Exception {
 
 
-	    ContaCorrenteEntity lancamento = this.buscaLancamentoElegivelParaResgate(idCliente, idVendedor);
+	    ContaCorrenteEntity lancamento = this.buscaLancamentoElegivelParaResgate(usernameCliente, usernameVendedor);
 		if (Objects.isNull(lancamento)) throw new Exception("Não existe nenhum lançamento elegivel para resgate para este cliente") ;
-		List<ContaCorrenteEntity> lntos = this.buscaLancamentosNaoResgatados(idCliente, idVendedor);
+		List<ContaCorrenteEntity> lntos = this.buscaLancamentosNaoResgatados(usernameCliente, usernameVendedor);
 		lntos.forEach(x -> {
 			x.setDataPgCashBack(LocalDateTime.now());
 			x.setFlgResgatado(true);
@@ -113,9 +113,9 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 	@Override
 	public ContaCorrenteDTO geraValorCashBack(ContaCorrenteDTO contaCorrenteDTO) throws Exception {
 
-		UUID idCliente = contaCorrenteDTO.getCliente().getIdCliente();
-		UUID idVendedor = contaCorrenteDTO.getVendedor().getIdVendedor();
-		List<ContaCorrenteEntity> lancamentos = this.buscaLancamentosNaoResgatados(idCliente, idVendedor);
+		String usernameCliente = contaCorrenteDTO.getCliente().getUsername();
+		String usernameVendedor = contaCorrenteDTO.getVendedor().getUsername();
+		List<ContaCorrenteEntity> lancamentos = this.buscaLancamentosNaoResgatados(usernameCliente, usernameVendedor);
 		CampanhaEntity campanhaEntity = campanhaJPARepository.findById(contaCorrenteDTO.getCliente().getIdCampanha()).orElseThrow(() -> new Exception("Cliente sem campanha"));
 		if (campanhaEntity.isFlgPercentualSobreCompras()){
 			// verificar se já nao tem cashback para sacar
@@ -147,18 +147,18 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 	}
 
 	@Override
-	public List<ContaCorrenteEntity> buscaLancamentosNaoResgatados(UUID idCliente, UUID idVendedor) {
-		List<ContaCorrenteEntity> lancamentos = contaCorrenteJPA.findAllByClienteIdPessoaAndVendedorIdPessoaAndFlgResgatadoFalse(idCliente, idVendedor);
+	public List<ContaCorrenteEntity> buscaLancamentosNaoResgatados(String usernameCliente, String usernameVendedor) {
+		List<ContaCorrenteEntity> lancamentos = contaCorrenteJPA.findAllByClienteUsernameAndVendedorUsernameAndFlgResgatadoFalse(usernameCliente, usernameVendedor);
 		return lancamentos;
 	}
 
-	public ContaCorrenteEntity buscaLancamentoElegivelParaResgate(UUID idCliente, UUID idVendedor) {
-		ContaCorrenteEntity lancamento = buscaCashBack(idCliente, idVendedor);
+	public ContaCorrenteEntity buscaLancamentoElegivelParaResgate(String usernameCliente, String usernameVendedor) {
+		ContaCorrenteEntity lancamento = buscaCashBack(usernameCliente, usernameVendedor);
 		return lancamento;
 	}
 
 	@Override
-	public ClienteDashDTO buscaDashCliente(UUID idCliente, UUID idVendedor) throws Exception {
+	public ClienteDashDTO buscaDashCliente(String usernameCliente, String usernameVendedor) throws Exception {
         SimpleDateFormat frmdata = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         Date dataUltCompra;
         try {
@@ -168,10 +168,10 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
         }
 
 		ClienteDashDTO retorno = new ClienteDashDTO();
-		ClienteEntity clienteEntity = clienteJPARepository.findByIdPessoa(idCliente);
+		ClienteEntity clienteEntity = clienteJPARepository.findByUsername(usernameCliente);
 		CampanhaEntity campanhaEntity = campanhaJPARepository.findByIdCampanha(clienteEntity.getCampanha().getIdCampanha());
-		VendedorEntity vendedorEntity = vendedorJPARepository.findByIdPessoa(idVendedor).orElseThrow(()-> new Exception("Vendedor não encontrado"));
-		List<ContaCorrenteEntity> lancamentos =  buscaLancamentosNaoResgatados(idCliente,idVendedor);
+		VendedorEntity vendedorEntity = vendedorJPARepository.findByUsername(usernameVendedor).orElseThrow(()-> new Exception("Vendedor não encontrado"));
+		List<ContaCorrenteEntity> lancamentos =  buscaLancamentosNaoResgatados(usernameCliente,usernameVendedor);
 		BigDecimal vlrGastosCliente = lancamentos.stream().map(x -> x.getValorLancamento()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		retorno.setVlrComprasRealizadas(vlrGastosCliente);
@@ -186,10 +186,10 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 	}
 
 	@Override
-	public void validaLancamento(UUID idCliente, UUID idVendedor) throws Exception {
+	public void validaLancamento(String usernameCliente, String usernameVendedor) throws Exception {
 
-		ClienteEntity clienteEntity = clienteJPARepository.findByIdPessoa(idCliente);
-		List<ContaCorrenteEntity> lancamentos =  buscaLancamentosNaoResgatados(idCliente,idVendedor);
+		ClienteEntity clienteEntity = clienteJPARepository.findByUsername(usernameCliente);
+		List<ContaCorrenteEntity> lancamentos =  buscaLancamentosNaoResgatados(usernameCliente, usernameVendedor);
 		if (clienteEntity.getCampanha().isFlgPercentualSobreCompras()){
 			// Percentual sobre QUANTIDADE DE COMPRAS
 			// Regra verifica se quantidade de compras realizadas já nao excedeu a quantidada da regra do cliente
@@ -211,19 +211,19 @@ public class ContaCorrenteImpl implements ContaCorrenteInterface {
 	}
 
 	@Override
-	public ContaCorrenteEntity buscaCashBack(UUID idCliente, UUID idVendedor) {
-		List<ContaCorrenteEntity> ccNaoSacado = contaCorrenteJPA.findAllCashBackNotWithdrawed( idCliente,  idVendedor);
+	public ContaCorrenteEntity buscaCashBack(String usernameCliente, String usernameVendedor) {
+		List<ContaCorrenteEntity> ccNaoSacado = contaCorrenteJPA.findAllCashBackNotWithdrawed( usernameCliente,  usernameVendedor);
 		if (ccNaoSacado.size() > 0)  {System.out.println("Achou");}
 		return ccNaoSacado.get(0);
 	}
 
 	@Override
-	public List<UltimoResgateDTO> buscaUltimoResgateDosClientes(UUID idVendedor) {
+	public List<UltimoResgateDTO> buscaUltimoResgateDosClientes(String usernameVendedor) {
 
 		List<UltimoResgateDTO> ultimoResgateDTOS = new ArrayList<>();
-		List<ContaCorrenteEntity> contaCorrenteEntityList =  contaCorrenteJPA.findAllByVendedorIdPessoaAndFlgResgatadoIsTrueAndValorCashBackIsNotNull(idVendedor);
+		List<ContaCorrenteEntity> contaCorrenteEntityList =  contaCorrenteJPA.findAllByVendedorUsernameAndFlgResgatadoIsTrueAndValorCashBackIsNotNull(usernameVendedor);
 		contaCorrenteEntityList.forEach(x -> {
-			ultimoResgateDTOS.add(UltimoResgateDTO.builder().idCliente(x.getIdCliente()).DataUltimoResgate(x.getDataPgCashBack()).vlrUltimoResgate(x.getValorCashBack()).idVendedor(x.getIdVendedor()).nomeCliente(x.getCliente().getNome()).build());
+			ultimoResgateDTOS.add(UltimoResgateDTO.builder().usernameCliente(x.getIdCliente()).DataUltimoResgate(x.getDataPgCashBack()).vlrUltimoResgate(x.getValorCashBack()).idVendedor(x.getVendedor().getUsername()).nomeCliente(x.getCliente().getNome()).build());
 		});
 
 		return ultimoResgateDTOS;

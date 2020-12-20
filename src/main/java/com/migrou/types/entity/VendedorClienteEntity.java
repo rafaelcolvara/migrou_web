@@ -22,10 +22,10 @@ import java.util.UUID;
 public class VendedorClienteEntity {
 
     @Id
-    private UUID idCliente;
+    private String idCliente;
 
     @Id
-    private UUID idVendedor;
+    private String idVendedor;
 
 
 }

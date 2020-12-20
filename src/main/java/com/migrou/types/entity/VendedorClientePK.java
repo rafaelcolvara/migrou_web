@@ -15,7 +15,7 @@ import java.util.UUID;
 public class VendedorClientePK implements Serializable {
 
 
-    private UUID idCliente;
+    private String idCliente;
 
-    private UUID idVendedor;
+    private String idVendedor;
 }

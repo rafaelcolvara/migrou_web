@@ -1,6 +1,5 @@
 package com.migrou.types.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,9 +13,9 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name ="VENDEDOR_TESTE")
-@EqualsAndHashCode
-public class VendedorTesteEntity implements Serializable {
+@Table(name ="VENDEDOR")
+@EqualsAndHashCode(of = {"username"})
+public class VendedorEntity implements Serializable {
 
 
 	private static final long serialVersionUID = 1739768953447220347L;
@@ -26,8 +25,7 @@ public class VendedorTesteEntity implements Serializable {
 	private String username;
 
 	@OneToOne
-	@MapsId
-	@JoinColumn(name = "vendedor_id")
+	@PrimaryKeyJoinColumn
 	private Usuario usuario;
 
 	@Column(name= "NOME_NEGOCIO")
@@ -38,12 +36,6 @@ public class VendedorTesteEntity implements Serializable {
 
 	@Column(name = "NOME", nullable = false)
 	private String nome;
-
-	@Column(name = "EMAIL", unique = true, nullable = false)
-	private String email;
-
-	@Column(name = "SENHA", nullable = false)
-	private String senha;
 
 	@Column(name = "CPFCNPJ", length = 14, scale = 0)
 	private Long cpfCnpj;

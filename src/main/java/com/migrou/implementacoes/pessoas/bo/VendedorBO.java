@@ -1,32 +1,27 @@
 package com.migrou.implementacoes.pessoas.bo;
 
+import com.migrou.types.dto.PessoaDTO;
+import com.migrou.types.dto.VendedorDTO;
+import com.migrou.types.entity.Usuario;
+import com.migrou.types.entity.VendedorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.migrou.types.dto.VendedorDTO;
-import com.migrou.types.entity.VendedorEntity;
-
-import java.util.UUID;
 
 @Component
 public class VendedorBO {
 
-	@Autowired
-	PessoaBO pessoaBo;
-	
+
 	public VendedorEntity parseDTOtoPojo(VendedorDTO vendedorDTO) {
 
 		VendedorEntity vendedor = new VendedorEntity();
 		vendedor.setNomeSegmento(vendedorDTO.getNomeSegmento());
 		vendedor.setNomeNegocio(vendedorDTO.getNomeNegocio());
-		if (vendedorDTO.getPessoaDTO() != null) {
-			vendedor.setCpfCnpj(vendedorDTO.getPessoaDTO().getCpfCnpj());
-			vendedor.setDtCadastro(vendedorDTO.getPessoaDTO().getDataCadastro());
-			vendedor.setDtNascimento(vendedorDTO.getPessoaDTO().getDataNascimento());
-			vendedor.setEmail(vendedorDTO.getPessoaDTO().getEmail());
-			vendedor.setNome(vendedorDTO.getPessoaDTO().getNome());
-			if (vendedorDTO.getPessoaDTO().getId()!=null) vendedor.setIdPessoa(vendedorDTO.getPessoaDTO().getId());
-		}
+		vendedor.setCpfCnpj(vendedorDTO.getCpfCnpj());
+		vendedor.setDtCadastro(vendedorDTO.getDataCadastro());
+		vendedor.setDtNascimento(vendedorDTO.getDataNascimento());
+		vendedor.setUsername(vendedorDTO.getUsername());
+		vendedor.setNome(vendedorDTO.getNome());
+
 		return vendedor;
 
 	}
@@ -36,9 +31,42 @@ public class VendedorBO {
 		VendedorDTO dto = new VendedorDTO();
 		dto.setNomeNegocio(vendedorEntity.getNomeNegocio());
 		dto.setNomeSegmento(vendedorEntity.getNomeSegmento());
-		dto.setIdVendedor(vendedorEntity.getIdPessoa());
-		dto.setPessoaDTO(pessoaBo.parsePojoToDto(vendedorEntity));
+		dto.setUsername (vendedorEntity.getUsername());
+		dto.setCpfCnpj(vendedorEntity.getCpfCnpj());
+		dto.setDataCadastro(vendedorEntity.getDtCadastro());
+		dto.setNome(vendedorEntity.getNome());
+		dto.setDataNascimento(vendedorEntity.getDtNascimento());
+		dto.setNrCelular(vendedorEntity.getNrCelular());
+
 		return dto;
 	}
+
+	public VendedorDTO parsePessoaDTOToVendedorDTO(PessoaDTO pessoaDTO) {
+		VendedorDTO vendedorDTO = new VendedorDTO();
+		vendedorDTO.setUsername(pessoaDTO.getEmail());
+		vendedorDTO.setNrCelular(pessoaDTO.getNrCelular());
+		vendedorDTO.setNome(pessoaDTO.getNome());
+		vendedorDTO.setDataCadastro(pessoaDTO.getDataCadastro());
+		vendedorDTO.setDataNascimento(pessoaDTO.getDataNascimento());
+		vendedorDTO.setNomeNegocio(pessoaDTO.getNomeNegocio());
+		vendedorDTO.setNomeSegmento(pessoaDTO.getSegmentoComercial());
+		vendedorDTO.setTipoPessoa(pessoaDTO.getTipoPessoa());
+		return vendedorDTO;
+	}
+	public PessoaDTO parseVendedorDTOToPessoaDTO(VendedorDTO  vendedorDTO) {
+		PessoaDTO pessoaDTO = new PessoaDTO();
+		pessoaDTO.setTipoPessoa("VENDEDOR");
+		pessoaDTO.setEmail(vendedorDTO.getUsername());
+		pessoaDTO.setNrCelular(vendedorDTO.getNrCelular());
+		pessoaDTO.setNome(vendedorDTO.getNome());
+		pessoaDTO.setCpfCnpj(vendedorDTO.getCpfCnpj());
+		pessoaDTO.setDataCadastro(vendedorDTO.getDataCadastro());
+		pessoaDTO.setDataNascimento(vendedorDTO.getDataNascimento());
+		pessoaDTO.setSegmentoComercial(vendedorDTO.getSegmentoComercial());
+		pessoaDTO.setNomeNegocio(vendedorDTO.getNomeNegocio());
+		return pessoaDTO;
+	}
+
+
 
 }

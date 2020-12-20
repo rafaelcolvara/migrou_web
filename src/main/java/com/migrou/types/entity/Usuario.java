@@ -1,20 +1,35 @@
 package com.migrou.types.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "USUARIO")
+@EqualsAndHashCode(of = {"username"})
+
 public class Usuario implements  UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Perfil> perfis =  new ArrayList<>();
+    private Set<Perfil> perfis =  new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "usuario")
+    @JsonIgnore
+    private ClienteEntity cliente;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "usuario")
+    @JsonIgnore
+    private VendedorEntity vendedor;
 
     @Id
     @NotEmpty
@@ -23,20 +38,9 @@ public class Usuario implements  UserDetails {
     @NotEmpty
     private String password;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.perfis;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
     }
 
     @Override
@@ -58,4 +62,6 @@ public class Usuario implements  UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

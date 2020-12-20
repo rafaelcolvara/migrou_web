@@ -13,8 +13,8 @@ public interface VendedorClienteJPARepository extends JpaRepository<VendedorClie
     @Override
     Optional<VendedorClienteEntity> findById(VendedorClientePK vendedorClientePK);
 
-    List<VendedorClienteEntity> findAllByIdVendedor(UUID idVendedor);
+    List<VendedorClienteEntity> findAllByIdVendedor(String usernameVendedor);
 
-    List<VendedorClienteEntity> findAllByIdCliente(UUID idCliente);
+    List<VendedorClienteEntity> findAllByIdCliente(String usernameCliente);
 
 }

@@ -1,28 +1,25 @@
 package com.migrou.implementacoes.pessoas.bo;
 
+import com.migrou.types.dto.PessoaDTO;
+import com.migrou.types.entity.ClienteEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.migrou.implementacoes.pessoas.bo.PessoaBO;
 import com.migrou.types.dto.ClienteDTO;
 import com.migrou.types.entity.CampanhaEntity;
-import com.migrou.types.entity.ClienteEntity;
 
 @Component
 public class ClienteBO {
 	
-	@Autowired
-	PessoaBO pessoaBo;
-	
+
 	public ClienteEntity parseDTOtoPojo(ClienteDTO dto) {
 		ClienteEntity cliente = new ClienteEntity();
 		CampanhaEntity campanha = new CampanhaEntity();
 		campanha.setIdCampanha(dto.getIdCampanha());
 		cliente.setCampanha(campanha);
-		cliente.setIdPessoa(dto.getIdCliente());
-		cliente.setCpfCnpj(dto.getPessoaDTO().getCpfCnpj());
-		cliente.setEmail(dto.getPessoaDTO().getEmail());
-		cliente.setDtNascimento(dto.getPessoaDTO().getDataNascimento());
+		cliente.setUsername(dto.getUsername());
+		cliente.setCpfCnpj(dto.getCpfCnpj());
+		cliente.setDtNascimento(dto.getDataNascimento());
 		return cliente;
 	}
 
@@ -31,11 +28,42 @@ public class ClienteBO {
 		if (entity.getCampanha()!=null) {
 			dto.setIdCampanha(entity.getCampanha().getIdCampanha());
 		}
-		dto.setIdCliente(entity.getIdPessoa());
-		dto.setPessoaDTO(pessoaBo.parsePojoToDto(entity));
+		dto.setUsername(entity.getUsername()) ;
+		dto.setDataCadastro(entity.getDtCadastro());
+		dto.setNome(entity.getNome());
+		dto.setCpfCnpj(entity.getCpfCnpj());
+		dto.setDataNascimento(entity.getDtNascimento());
+		dto.setIdCampanha(entity.getCampanha().getIdCampanha());
+		dto.setNrCelular(entity.getNrCelular());
+		dto.setTipoPessoa("CLIENTE");
 
 		return dto;
-		
+	}
+	public PessoaDTO parseClienteDTOPessoaDTO(ClienteDTO clienteDTO) {
+
+		PessoaDTO pessoaDTO = new PessoaDTO();
+		pessoaDTO.setEmail(clienteDTO.getUsername());
+		pessoaDTO.setTipoPessoa("CLIENTE");
+		pessoaDTO.setNome(clienteDTO.getNome());
+		pessoaDTO.setCpfCnpj(clienteDTO.getCpfCnpj());
+		pessoaDTO.setDataCadastro(clienteDTO.getDataCadastro());
+		pessoaDTO.setDataNascimento(clienteDTO.getDataNascimento());
+		pessoaDTO.setNrCelular(clienteDTO.getNrCelular());
+		return pessoaDTO;
+	}
+
+	public ClienteDTO parsePessoaDTOClienteDTO(PessoaDTO pessoaDTO) {
+
+		ClienteDTO clienteDTO = new ClienteDTO();
+		clienteDTO.setUsername(pessoaDTO.getEmail());
+		clienteDTO.setTipoPessoa("CLIENTE");
+		clienteDTO.setNome(pessoaDTO.getNome());
+		clienteDTO.setCpfCnpj(pessoaDTO.getCpfCnpj());
+		clienteDTO.setDataNascimento(pessoaDTO.getDataNascimento());
+		clienteDTO.setDataCadastro(pessoaDTO.getDataCadastro());
+		clienteDTO.setNrCelular(pessoaDTO.getNrCelular());
+
+		return clienteDTO;
 	}
 	
 }

@@ -1,31 +1,23 @@
 package com.migrou.interfaces.vendedor;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.migrou.types.entity.ClienteEntity;
 import com.migrou.types.entity.VendedorEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface VendedorJPARepository extends JpaRepository<VendedorEntity, UUID> {
+import java.util.List;
+import java.util.Optional;
+
+public interface VendedorJPARepository extends JpaRepository<VendedorEntity, String> {
 	
 	List<VendedorEntity> findByNomeContains(String nome);
 	List<VendedorEntity> findByNomeSegmento(String nomeSegmento);
 	List<VendedorEntity> findByNomeNegocio(String nomeNegocio);
-	List<VendedorEntity> findByEmail(String email);
 	List<VendedorEntity> findAll();
-	Optional<VendedorEntity> findByIdPessoa(UUID idPessoa);
+	Optional<VendedorEntity> findByUsername(String usernameVendedor);
 
-	@Query("SELECT p FROM VendedorEntity p where p.email = :email and p.senha = :senha")
-	VendedorEntity findbyEmailIgnoreCaseAndSenha(String email, String senha);
-
-	@Query("SELECT p FROM VendedorEntity p where p.email = :email ")
+	@Query("SELECT p FROM VendedorEntity p where p.username = :email ")
 	VendedorEntity findbyEmailIgnoreCase(@Param("email") String email);
-
 
 
 }

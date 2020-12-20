@@ -51,9 +51,9 @@ public class ClienteController {
 
 	@GetMapping(value = "{idCliente}/buscaSeusVendedores", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta Todos os Vendedores do cliente informado")
-	public ResponseEntity<ClienteListaVendedoresDTO> ConsultaVendedoresDoCliente(@PathVariable UUID idCliente) {
+	public ResponseEntity<ClienteListaVendedoresDTO> ConsultaVendedoresDoCliente(@PathVariable String usernameCliente) {
 		try {
-			return new ResponseEntity<ClienteListaVendedoresDTO>(vendedorCliente.buscaVendedoresDoCliente(idCliente), HttpStatus.OK);
+			return new ResponseEntity<ClienteListaVendedoresDTO>(vendedorCliente.buscaVendedoresDoCliente(usernameCliente), HttpStatus.OK);
 		}catch (Exception e)
 		{
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

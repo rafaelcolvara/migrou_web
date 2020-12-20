@@ -4,14 +4,16 @@ import com.migrou.implementacoes.pessoas.bo.ClienteBO;
 import com.migrou.implementacoes.pessoas.bo.VendedorBO;
 import com.migrou.interfaces.cliente.ClienteJPARepository;
 import com.migrou.interfaces.contaCorrente.ContaCorrenteJPARepository;
-import com.migrou.interfaces.pessoas.PessoaJPARpository;
+import com.migrou.interfaces.usuario.UsuarioJPA;
 import com.migrou.interfaces.vendedor.VendedorInterface;
 import com.migrou.interfaces.vendedor.VendedorJPARepository;
 import com.migrou.interfaces.vendedorCliente.VendedorClienteJPARepository;
 import com.migrou.types.dto.ClienteVendedorDTO;
 import com.migrou.types.dto.VendedorDTO;
+import com.migrou.types.entity.Usuario;
 import com.migrou.types.entity.VendedorClienteEntity;
 import com.migrou.types.entity.VendedorClientePK;
+import com.migrou.types.entity.VendedorEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service("VendedorService")
 public class VendedorImpl implements VendedorInterface {
@@ -41,19 +42,20 @@ public class VendedorImpl implements VendedorInterface {
 	
 	@Autowired
 	ClienteBO clienteBO;
-	
-	
+
 	@Autowired
-	PessoaJPARpository pessoaJpa;
-	
+	UsuarioJPA usuarioJPA;
+
 	@Override
 	@Transactional
 	public VendedorDTO incluiVendedor(VendedorDTO vendedorDTO) throws Exception {
 		
-		if (!vendedorJPARepository.findByEmail(vendedorDTO.getPessoaDTO().getEmail()).isEmpty())
+		if (vendedorJPARepository.findByUsername(vendedorDTO.getUsername()).isPresent())
 			throw new Exception("Já existe outra pessoa com este email");
-		
-		return vendedorBO.parsePojoToDTO(vendedorJPARepository.save(vendedorBO.parseDTOtoPojo(vendedorDTO)));
+		VendedorEntity vendedorEntity = vendedorBO.parseDTOtoPojo(vendedorDTO);
+		Usuario usuario = usuarioJPA.findByUsername(vendedorDTO.getUsername()).get();
+		vendedorEntity.setUsuario(usuario);
+		return vendedorBO.parsePojoToDTO(vendedorJPARepository.saveAndFlush(vendedorEntity));
 	}
 
 	
@@ -100,9 +102,9 @@ public class VendedorImpl implements VendedorInterface {
 	}
 
 	@Override
-	public VendedorDTO consultaVendedorPorId(UUID idVendedor) throws Exception {
+	public VendedorDTO consultaVendedorPorId(String usernameVendedor) throws Exception {
 		 
-		return vendedorBO.parsePojoToDTO(vendedorJPARepository.findByIdPessoa(idVendedor).orElseThrow(()-> new Exception("Vendedor não encontrado")));
+		return vendedorBO.parsePojoToDTO(vendedorJPARepository.findByUsername(usernameVendedor).orElseThrow(()-> new Exception("Vendedor não encontrado")));
 	}
 
 	@Override
@@ -111,15 +113,15 @@ public class VendedorImpl implements VendedorInterface {
 
 		VendedorClientePK vendedorClientePK =  new VendedorClientePK();
 		VendedorClienteEntity vendedorClienteEntity = new VendedorClienteEntity();
-		if (Objects.isNull(clienteVendedorDTO.getVendedor()) || Objects.isNull(clienteVendedorDTO.getVendedor().getIdVendedor()) ) {
+		if (Objects.isNull(clienteVendedorDTO.getVendedor()) || Objects.isNull(clienteVendedorDTO.getVendedor().getUsername()) ) {
 			throw new Exception("É necessário informar o Vendedor");
 		}
-		if (Objects.isNull(clienteVendedorDTO.getCliente()) || Objects.isNull(clienteVendedorDTO.getCliente().getIdCliente())) {
+		if (Objects.isNull(clienteVendedorDTO.getCliente()) || Objects.isNull(clienteVendedorDTO.getCliente().getUsername())) {
 			throw new Exception("É necessário informar o Cliente");
 		}
 
-		vendedorClientePK.setIdCliente(clienteJPARepository.findById(clienteVendedorDTO.getCliente().getIdCliente()).orElseThrow(() -> new Exception("Cliente nao encontrado")).getIdPessoa());
-		vendedorClientePK.setIdVendedor(vendedorJPARepository.findById(clienteVendedorDTO.getVendedor().getIdVendedor()).orElseThrow(()-> new Exception("Vendedor nao encontrado")).getIdPessoa());
+		vendedorClientePK.setIdCliente(clienteJPARepository.findById(clienteVendedorDTO.getCliente().getUsername()).orElseThrow(() -> new Exception("Cliente nao encontrado")).getUsername());
+		vendedorClientePK.setIdVendedor(vendedorJPARepository.findById(clienteVendedorDTO.getVendedor().getUsername()).orElseThrow(()-> new Exception("Vendedor nao encontrado")).getUsername());
 
 		if (vendedorClienteJPARepository.findById(vendedorClientePK).isPresent()){
 			throw new Exception("Cliente já atribuido ao vendedor");

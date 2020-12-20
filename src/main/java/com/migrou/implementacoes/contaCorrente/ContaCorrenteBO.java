@@ -37,8 +37,8 @@ public class ContaCorrenteBO {
 		ContaCorrenteEntity cc = new ContaCorrenteEntity();
 		cc.setCliente(clienteBO.parseDTOtoPojo(dto.getCliente()));
 		cc.setVendedor(vendedorBO.parseDTOtoPojo(dto.getVendedor()));
-		cc.setIdCliente(dto.getCliente().getIdCliente());
-		cc.setIdVendedor(dto.getVendedor().getIdVendedor());
+		cc.setIdCliente(dto.getCliente().getUsername());
+		cc.setIdVendedor(dto.getVendedor().getUsername());
 		cc.setDataLancamento(dto.getDtLancamento());
 		cc.setValorLancamento(dto.getValorLancamento());
 		cc.setValorCashBack(dto.getValorCashBack());		

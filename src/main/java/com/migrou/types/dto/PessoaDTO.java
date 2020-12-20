@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.Size;
@@ -21,19 +22,13 @@ import javax.validation.constraints.Size;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class PessoaDTO implements Serializable {
 
-    /**
-     * não incluir campos novos pois impacta no login
-     */
-
-    private UUID id;
-    
     private String nome;
     
     private String email;
 
     private String senha;
 
-    @Size(max = 14)
+    @Range(min = 11, max = 14)
     private Long cpfCnpj;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "GMT-03")

@@ -1,7 +1,6 @@
 package com.migrou.config;
 
 import com.migrou.implementacoes.auth.TokenService;
-import com.migrou.interfaces.pessoas.PessoaInterface;
 import com.migrou.interfaces.usuario.UsuarioJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -49,6 +47,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
         http.cors().disable().authorizeRequests()
         .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
         .antMatchers(HttpMethod.POST, "/usuario/login").permitAll()
+        .antMatchers(HttpMethod.POST, "/usuario/inclui").permitAll()
         .antMatchers("/webjars/**").permitAll()
         .antMatchers("/swagger-resources/**").permitAll()
         .antMatchers("/v2/api-docs").permitAll()

@@ -13,6 +13,6 @@ public interface VendedorInterface {
 	List<VendedorDTO> consutaVendedorPorNome(String nome);
 	List<VendedorDTO> consutaVendedorPorNomeNegocio(String nomeNegocio);
 	List<VendedorDTO> buscaTodos();
-	VendedorDTO consultaVendedorPorId(UUID idVendedor) throws Exception;
+	VendedorDTO consultaVendedorPorId(String usernameVendedor) throws Exception;
 	
 }

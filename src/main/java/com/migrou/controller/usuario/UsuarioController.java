@@ -1,11 +1,18 @@
 package com.migrou.controller.usuario;
 
 import com.migrou.implementacoes.auth.TokenService;
-import com.migrou.interfaces.pessoas.PessoaInterface;
+import com.migrou.implementacoes.pessoas.UsuarioImpl;
+import com.migrou.implementacoes.pessoas.bo.ClienteBO;
+import com.migrou.implementacoes.pessoas.bo.VendedorBO;
+import com.migrou.interfaces.cliente.ClienteInterface;
 import com.migrou.interfaces.usuario.UsuarioJPA;
+import com.migrou.interfaces.vendedor.VendedorInterface;
+import com.migrou.types.dto.ClienteDTO;
 import com.migrou.types.dto.LoginDTO;
 import com.migrou.types.dto.PessoaDTO;
+import com.migrou.types.dto.VendedorDTO;
 import com.migrou.types.entity.Usuario;
+import com.migrou.types.entity.VendedorEntity;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,25 +22,29 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Date;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/usuario/")
+@RequestMapping("/usuario")
 public class UsuarioController {
 
     @Autowired
     UsuarioJPA usuarioJPA;
 
     @Autowired
-    PessoaInterface pessoaInterface;
+    UsuarioImpl usuarioImpl;
+
+    @Autowired
+    VendedorInterface vendedorInterface;
+
+    @Autowired
+    ClienteInterface clienteInterface;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -47,12 +58,22 @@ public class UsuarioController {
 
         UsernamePasswordAuthenticationToken dadosLogin = loginDTO.converter();
         try {
-
+            PessoaDTO pessoaDTO = new PessoaDTO();
             Authentication authentication = authenticationManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authentication);
-            System.out.println("Vai chamar a consulta de usuario:" + loginDTO.getUsername() + " - " + loginDTO.getTipoPessoa());
-            PessoaDTO pessoaDTO = pessoaInterface.consultaPorEmaileTipoPessoa(loginDTO.getUsername(), loginDTO.getTipoPessoa());
-            System.out.println("buscou o cara: " + pessoaDTO.getNome());
+            Usuario usuario = usuarioJPA.findByUsername(loginDTO.getUsername()).orElseThrow(() -> new Exception("Usuario nao encontrado"));
+            if (usuario.getAuthorities().stream().filter(x -> x.getAuthority().equals(loginDTO.getTipoPessoa())).count()==0){
+                throw new Exception("Perfil nao encontrado para este usuário");
+            }
+            if (loginDTO.getTipoPessoa().equals("VENDEDOR")){
+                VendedorDTO vendedorDTO = new VendedorDTO();
+                vendedorDTO = vendedorInterface.consultaVendedorPorId(loginDTO.getUsername());
+                pessoaDTO = new VendedorBO().parseVendedorDTOToPessoaDTO(vendedorDTO);
+            } else {
+                ClienteDTO clienteDTO = new ClienteDTO();
+                clienteDTO = clienteInterface.consultaClienteporID(loginDTO.getUsername());
+                pessoaDTO = new ClienteBO().parseClienteDTOPessoaDTO(clienteDTO);
+            }
 
             pessoaDTO.setToken(token);
 
@@ -62,6 +83,22 @@ public class UsuarioController {
         } catch (Exception e) {
             return new ResponseEntity(HttpStatus.BAD_GATEWAY);
         }
+    }
+
+    @PostMapping(value = "/inclui", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Cadastro de usuários do Migrou ")
+    public ResponseEntity<?> incluirUsuario(@RequestBody PessoaDTO pessoaDTO) throws Exception {
+
+        try {
+            Usuario usuario = usuarioImpl.salva(pessoaDTO);
+        }catch (Exception e){
+            if (e.getMessage().contains("ja cadastrado")) {
+
+                return ResponseEntity.badRequest().body(pessoaDTO.getTipoPessoa() + " ja cadastrado" );
+            }
+        }
+
+        return ResponseEntity.ok().body(pessoaDTO);
     }
 
 }

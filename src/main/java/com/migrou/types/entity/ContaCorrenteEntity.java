@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,7 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.bytebuddy.dynamic.loading.ClassReloadingStrategy.Strategy;
 
 @Entity
 @Table(name = "CONTA_CORRENTE")
@@ -40,10 +38,10 @@ public class ContaCorrenteEntity {
 	private Integer id;
 	
 	@Id
-	private UUID idCliente;
+	private String idCliente;
 	
 	@Id
-	private UUID idVendedor;
+	private String idVendedor;
 
 	@Column(name = "DT_LANCAMENTO", nullable = false)
 	private Date dataLancamento;

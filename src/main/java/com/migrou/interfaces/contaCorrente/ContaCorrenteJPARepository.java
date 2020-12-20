@@ -11,12 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ContaCorrenteJPARepository extends JpaRepository<ContaCorrenteEntity,Integer> {
 	
-	List<ContaCorrenteEntity> findAllByClienteIdPessoaAndVendedorIdPessoaAndFlgResgatadoFalse(UUID idCliente, UUID idVendedor);
+	List<ContaCorrenteEntity> findAllByClienteUsernameAndVendedorUsernameAndFlgResgatadoFalse(String username, String idVendedor);
 
-	List<ContaCorrenteEntity> findAllByVendedorIdPessoaAndFlgResgatadoIsTrueAndValorCashBackIsNotNull(UUID idVendedor);
+	List<ContaCorrenteEntity> findAllByVendedorUsernameAndFlgResgatadoIsTrueAndValorCashBackIsNotNull(String idVendedor);
 
 	@Query("SELECT u FROM ContaCorrenteEntity u WHERE u.idCliente = ?1 and u.idVendedor = ?2 and u.valorCashBack is not null and u.flgResgatado = false")
-	List<ContaCorrenteEntity> findAllCashBackNotWithdrawed(UUID idCliente, UUID idVendedor);
+	List<ContaCorrenteEntity> findAllCashBackNotWithdrawed(String usernameCliente, String idVendedor);
 
 
 }

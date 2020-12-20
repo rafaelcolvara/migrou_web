@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service("VendedorCliente")
 public class VendedorClienteImpl implements VendedorClienteInterface {
@@ -39,28 +38,28 @@ public class VendedorClienteImpl implements VendedorClienteInterface {
     ClienteBO clienteBO;
 
     @Override
-    public VendedorListaClientesDTO buscaClientesDoVendedor(UUID idVendedor) throws Exception {
+    public VendedorListaClientesDTO buscaClientesDoVendedor(String usernameVendedor) throws Exception {
         VendedorListaClientesDTO vendedorListaClientesDTO = new VendedorListaClientesDTO();
 
         List<ClienteDTO> clienteDTOS = new ArrayList<>();
-        List<VendedorClienteEntity> lista = vendedorClienteJPARepository.findAllByIdVendedor(idVendedor);
+        List<VendedorClienteEntity> lista = vendedorClienteJPARepository.findAllByIdVendedor(usernameVendedor);
         if (Objects.isNull(lista) || lista.isEmpty()){
             throw new Exception("Nao existe nenhum cliente deste vendedor");
         }
         List<ClienteDTO> newCliente = new ArrayList<>();
-        vendedorListaClientesDTO.setVendedor(vendedorBO.parsePojoToDTO(vendedorJPARepository.findByIdPessoa(idVendedor).orElseThrow(()-> new Exception("Vendedor não encontrado"))));
+        vendedorListaClientesDTO.setVendedor(vendedorBO.parsePojoToDTO(vendedorJPARepository.findByUsername(usernameVendedor).orElseThrow(()-> new Exception("Vendedor não encontrado"))));
         lista.stream().forEach(x-> {
-            newCliente.add(clienteBO.parsePojoToDTO(clienteJPARepository.findByIdPessoa(x.getIdCliente())));
+            newCliente.add(clienteBO.parsePojoToDTO(clienteJPARepository.findByUsername(x.getIdCliente())));
         });
         vendedorListaClientesDTO.setClientes(newCliente);
         return vendedorListaClientesDTO;
     }
 
     @Override
-    public ClienteListaVendedoresDTO buscaVendedoresDoCliente(UUID idCliente) throws Exception {
+    public ClienteListaVendedoresDTO buscaVendedoresDoCliente(String usernameCliente) throws Exception {
         ClienteListaVendedoresDTO clienteListaVendedoresDTO = new ClienteListaVendedoresDTO();
 
-        List<VendedorClienteEntity> lista = vendedorClienteJPARepository.findAllByIdCliente(idCliente);
+        List<VendedorClienteEntity> lista = vendedorClienteJPARepository.findAllByIdCliente(usernameCliente);
         if (Objects.isNull(lista) || lista.isEmpty()){
             throw new Exception("Nao existe nenhum cliente deste vendedor");
         }
@@ -68,7 +67,7 @@ public class VendedorClienteImpl implements VendedorClienteInterface {
         lista.stream().forEach(x-> {
             VendedorEntity consulta = null;
             try {
-                consulta = vendedorJPARepository.findByIdPessoa(x.getIdVendedor()).orElseThrow(()-> new Exception("Vendedor Não encontrado"));
+                consulta = vendedorJPARepository.findByUsername(x.getIdVendedor()).orElseThrow(()-> new Exception("Vendedor Não encontrado"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
