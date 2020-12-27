@@ -3,8 +3,6 @@ package com.migrou.interfaces.vendedorCliente;
 import com.migrou.types.dto.ClienteListaVendedoresDTO;
 import com.migrou.types.dto.VendedorListaClientesDTO;
 
-import java.util.UUID;
-
 public interface VendedorClienteInterface {
 
     VendedorListaClientesDTO buscaClientesDoVendedor(String usernameVendedor) throws Exception;

@@ -6,7 +6,6 @@ import com.migrou.types.dto.UltimoResgateDTO;
 import com.migrou.types.entity.ContaCorrenteEntity;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface ContaCorrenteInterface {
 

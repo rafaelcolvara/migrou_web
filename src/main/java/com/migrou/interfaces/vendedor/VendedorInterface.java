@@ -1,9 +1,9 @@
 package com.migrou.interfaces.vendedor;
 
-import java.util.List;
-import java.util.UUID;
+import com.migrou.types.dto.ClienteVendedorDTO;
+import com.migrou.types.dto.VendedorDTO;
 
-import com.migrou.types.dto.*;
+import java.util.List;
 
 public interface VendedorInterface {
 	

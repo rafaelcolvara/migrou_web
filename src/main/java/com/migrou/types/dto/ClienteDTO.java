@@ -3,7 +3,6 @@ package com.migrou.types.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.Setter;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.UUID;
 
 @AllArgsConstructor
 @Getter

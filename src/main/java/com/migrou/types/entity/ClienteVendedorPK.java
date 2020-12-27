@@ -1,21 +1,9 @@
 package com.migrou.types.entity;
 
-import java.io.Serializable;
-import java.util.UUID;
-
-import javax.annotation.Generated;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.io.Serializable;
 
 
 @JsonIgnoreProperties
@@ -30,7 +18,7 @@ public class ClienteVendedorPK implements Serializable{
 
 	private Integer id;
 	
-	private UUID idCliente;
+	private String idCliente;
 	
-	private UUID idVendedor;
+	private String idVendedor;
 }
