@@ -6,6 +6,7 @@ import com.migrou.implementacoes.pessoas.bo.ClienteBO;
 import com.migrou.interfaces.cliente.ClienteInterface;
 import com.migrou.types.dto.CampanhaDTO;
 import com.migrou.types.dto.ClienteDTO;
+import com.sun.xml.bind.v2.TODO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.List;
 @Api(value = "Api de administração de campanhas")
 @CrossOrigin(origins = "*")
 public class CampanhaController {
+
 
     @Autowired
     CampanhaImpl campanhaService;
@@ -46,11 +48,15 @@ public class CampanhaController {
         
     }
 
-    @PatchMapping(value = "/{IdCampanha}/cliente/{IdPessoa}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{IdCampanha}/cliente/{emailCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Vincula campanha ao cliente")
-    public ResponseEntity<ClienteDTO> AtribuiCampanhaAoCliente(@PathVariable("IdCampanha") Integer  idCampanha, @PathVariable("email") String usernameCliente)  {
+    public ResponseEntity<ClienteDTO> AtribuiCampanhaAoCliente(@PathVariable("IdCampanha") Integer  idCampanha, @PathVariable("emailCliente") String usernameCliente)  {
         try{
         	ClienteDTO clienteDTO = new ClienteDTO();
+            //TODO: Verificar se o usuário já está cadastrado em outra campanha e se tiver, verificar
+            //      se existe lançamentos sem saque do cashback.
+
+
         	clienteDTO.setIdCampanha(idCampanha);
         	clienteDTO.setUsername(usernameCliente);
             return new ResponseEntity<ClienteDTO>(clienteBO.parsePojoToDTO(clienteInterface.atribuirCampanha(clienteDTO)), HttpStatus.OK );

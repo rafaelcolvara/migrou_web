@@ -40,9 +40,9 @@ public class ContaCorrenteController {
         }
     }
 
-    @PatchMapping(value = "resgate/vendedor/{idVendedor}/cliente/{idCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "resgate/vendedor/{emailVendedor}/cliente/{emailCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Realiza resgate")
-    public ResponseEntity<?> RealizaResgate(@PathVariable("idVendedor") final String usernameVendedor, @PathVariable("idCliente") final String usernameCliente) {
+    public ResponseEntity<?> RealizaResgate(@PathVariable("emailVendedor") final String usernameVendedor, @PathVariable("emailCliente") final String usernameCliente) {
         try {
             return new ResponseEntity<ContaCorrenteDTO>(contacorrenteService.realizaResgate(usernameCliente, usernameVendedor), HttpStatus.OK);
         } catch (Exception e) {
@@ -50,19 +50,11 @@ public class ContaCorrenteController {
         }
     }
 
-    @GetMapping(value = "/{idVendedor}/full", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Consulta Movimento de todos os clientes")
-    public ResponseEntity<List<ContaCorrenteDTO>> ConsultaHistoricoConta(
-            @PathVariable("idVendedor") final Integer idVendedor) {
 
-        List<ContaCorrenteDTO> oiee = new ArrayList<>();
-        return new ResponseEntity<List<ContaCorrenteDTO>>(oiee, HttpStatus.OK);
 
-    }
-
-    @GetMapping(value = "/{idVendedor}/DashCliente/{idCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{emailVendedor}/DashCliente/{emailCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Consulta Dashboard do cliente")
-    public ResponseEntity<?> ConsultaDashBoardCliente(@PathVariable("idVendedor") String usernameVendedor, @PathVariable("idCliente") final String usernameCliente) {
+    public ResponseEntity<?> ConsultaDashBoardCliente(@PathVariable("emailVendedor") String usernameVendedor, @PathVariable("emailCliente") final String usernameCliente) {
 
         try {
 
@@ -75,9 +67,9 @@ public class ContaCorrenteController {
         }
     }
 
-    @GetMapping(value = "/{idVendedor}/DashTodosClientes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{emailVendedor}/DashTodosClientes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Consulta todos os clientes do vendedor contendo informações de consumo de compras para dashboard")
-    public ResponseEntity<?> ConsultaListaDashCliente(@PathVariable("idVendedor") String usernameVendedor) {
+    public ResponseEntity<?> ConsultaListaDashCliente(@PathVariable("emailVendedor") String usernameVendedor) {
 
         try {
             List<ClienteDashDTO> ListaClientesRetorno =  new ArrayList<>();
@@ -99,9 +91,9 @@ public class ContaCorrenteController {
         }
     }
 
-    @GetMapping(value = "/{idVendedor}/BuscaUltimosResgates", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{emailVendedor}/BuscaUltimosResgates", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Busca todos os resgates dos clientes do vendedor informado")
-    public ResponseEntity<?> ConsultaResgatesDosSeusCliente(@PathVariable("idVendedor") String usernameVendedor) {
+    public ResponseEntity<?> ConsultaResgatesDosSeusCliente(@PathVariable("emailVendedor") String usernameVendedor) {
 
         try {
 

@@ -93,9 +93,11 @@ public class UsuarioController {
             Usuario usuario = usuarioImpl.salva(pessoaDTO);
         }catch (Exception e){
             if (e.getMessage().contains("ja cadastrado")) {
-
                 return ResponseEntity.badRequest().body(pessoaDTO.getTipoPessoa() + " ja cadastrado" );
+            }else {
+                return ResponseEntity.badRequest().body(e.getMessage() );
             }
+
         }
 
         return ResponseEntity.ok().body(pessoaDTO);

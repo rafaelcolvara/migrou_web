@@ -33,7 +33,6 @@ public class ClienteBO {
 		dto.setNome(entity.getNome());
 		dto.setCpfCnpj(entity.getCpfCnpj());
 		dto.setDataNascimento(entity.getDtNascimento());
-		dto.setIdCampanha(entity.getCampanha().getIdCampanha());
 		dto.setNrCelular(entity.getNrCelular());
 		dto.setTipoPessoa("CLIENTE");
 

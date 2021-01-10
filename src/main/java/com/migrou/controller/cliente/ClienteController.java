@@ -48,9 +48,9 @@ public class ClienteController {
 		}		
 	}
 
-	@GetMapping(value = "{idCliente}/buscaSeusVendedores", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/{emailCliente}/buscaSeusVendedores", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta Todos os Vendedores do cliente informado")
-	public ResponseEntity<ClienteListaVendedoresDTO> ConsultaVendedoresDoCliente(@PathVariable String usernameCliente) {
+	public ResponseEntity<ClienteListaVendedoresDTO> ConsultaVendedoresDoCliente(@PathVariable("emailCliente") String usernameCliente) {
 		try {
 			return new ResponseEntity<ClienteListaVendedoresDTO>(vendedorCliente.buscaVendedoresDoCliente(usernameCliente), HttpStatus.OK);
 		}catch (Exception e)
