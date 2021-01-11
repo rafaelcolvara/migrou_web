@@ -2,6 +2,7 @@ package com.migrou.controller.cliente;
 
 import com.migrou.implementacoes.pessoas.cliente.ClienteImpl;
 import com.migrou.implementacoes.pessoas.vendedor.VendedorClienteImpl;
+import com.migrou.interfaces.cliente.ClienteInterface;
 import com.migrou.types.dto.ClienteDTO;
 import com.migrou.types.dto.ClienteListaVendedoresDTO;
 import io.swagger.annotations.Api;
@@ -21,7 +22,7 @@ import java.util.List;
 public class ClienteController {
 
 	@Autowired
-	ClienteImpl cliente;
+	ClienteInterface cliente;
 
 	@Autowired
 	VendedorClienteImpl vendedorCliente;
@@ -59,5 +60,16 @@ public class ClienteController {
 		}
 	}
 
-	
+	@GetMapping(value = "/{emailCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Consulta dados do cliente utilizando o login")
+	public ResponseEntity<ClienteDTO> consultaCliente(@PathVariable("emailCliente") String usernameCliente) {
+		try {
+			return new ResponseEntity<ClienteDTO>(cliente.consultaClienteporID(usernameCliente), HttpStatus.OK);
+		}catch (Exception e)
+		{
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+
 }

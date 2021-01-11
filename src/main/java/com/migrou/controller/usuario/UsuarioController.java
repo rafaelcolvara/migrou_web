@@ -97,7 +97,6 @@ public class UsuarioController {
             }else {
                 return ResponseEntity.badRequest().body(e.getMessage() );
             }
-
         }
 
         return ResponseEntity.ok().body(pessoaDTO);

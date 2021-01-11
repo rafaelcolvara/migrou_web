@@ -2,6 +2,7 @@ package com.migrou.controller.vendedor;
 
 import com.migrou.implementacoes.pessoas.vendedor.VendedorClienteImpl;
 import com.migrou.implementacoes.pessoas.vendedor.VendedorImpl;
+import com.migrou.interfaces.vendedor.VendedorInterface;
 import com.migrou.types.dto.ClienteListaVendedoresDTO;
 import com.migrou.types.dto.ClienteVendedorDTO;
 import com.migrou.types.dto.VendedorDTO;
@@ -25,7 +26,7 @@ public class VendedorController {
 
 
 	@Autowired
-	VendedorImpl vendedorservice;
+	VendedorInterface vendedorservice;
 
 	@Autowired
 	VendedorClienteImpl vendedorCliente;
@@ -86,6 +87,18 @@ public class VendedorController {
 			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<ClienteListaVendedoresDTO>(cliente, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/{emailVendedor}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Consulta dados do vendedor utilizando o seu login")
+	public ResponseEntity<VendedorDTO> buscaVendedor(@PathVariable("emailVendedor") String usernameVendedor ) {
+		VendedorDTO vendedorDTO;
+		try {
+			vendedorDTO = vendedorservice.consultaVendedorPorId(usernameVendedor);
+		}catch (Exception e){
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<VendedorDTO>(vendedorDTO, HttpStatus.OK);
 	}
 
 }
