@@ -71,9 +71,12 @@ public class VendedorClienteImpl implements VendedorClienteInterface {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            newVendedorLista.add(vendedorBO.parsePojoToDTO(consulta));
+            VendedorDTO tmp = vendedorBO.parsePojoToDTO(consulta);
+            newVendedorLista.add(tmp);
+
         });
         clienteListaVendedoresDTO.setVendedores(newVendedorLista);
         return clienteListaVendedoresDTO;
     }
+
 }

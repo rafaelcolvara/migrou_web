@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.UUID;
@@ -23,10 +24,16 @@ public class VendedorDTO {
 
 	private String username;
 
+	@NotNull
 	private String nomeNegocio;
 
+	@NotNull
 	private String nomeSegmento;
 
+	@NotNull
+	private String segmentoComercial;
+
+	@NotNull
 	private String nome;
 
 	@Size(max = 14)
@@ -38,6 +45,7 @@ public class VendedorDTO {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "GMT-03")
 	private Date dataNascimento;
 
+	@NotNull
 	private String nrCelular;
 
 	private boolean flgEmailValido;
@@ -45,8 +53,6 @@ public class VendedorDTO {
 	private String urlFoto;
 
 	private String tipoPessoa;
-
-	private String segmentoComercial;
 
 	private String token;
 

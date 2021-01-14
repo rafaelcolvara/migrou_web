@@ -3,6 +3,7 @@ package com.migrou.types.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -29,12 +30,15 @@ public class VendedorEntity implements Serializable {
 	private Usuario usuario;
 
 	@Column(name= "NOME_NEGOCIO")
+	@NotNull
 	private String nomeNegocio;
 	
 	@Column(name = "SEGMENTO")
+	@NotNull
 	private String nomeSegmento;
 
 	@Column(name = "NOME", nullable = false)
+	@NotNull
 	private String nome;
 
 	@Column(name = "CPFCNPJ", length = 14, scale = 0)
@@ -53,6 +57,7 @@ public class VendedorEntity implements Serializable {
 	private Boolean flgEmailValido;
 
 	@Column(name = "NR_CELULAR")
+	@NotNull
 	private String nrCelular;
 	
 	@OneToMany(
