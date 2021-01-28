@@ -1,9 +1,6 @@
 package com.migrou.implementacoes.pessoas.cliente;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.transaction.Transactional;
 
@@ -44,12 +41,15 @@ public class ClienteImpl implements ClienteInterface {
 	@Override
 	@Transactional
 	public ClienteDTO incluirCliente(ClienteDTO clienteDTO) throws Exception {
-			
-		if (Optional.of(clienteJpaRepository.findByUsername(clienteDTO.getUsername())).isPresent()) {
+
+		ClienteEntity cliente = clienteJpaRepository.findByUsername(clienteDTO.getUsername());
+		if (!Objects.isNull(cliente)) {
 			throw new Exception("Cliente já cadastrado com este email");
+		} else		{
+			cliente = new ClienteEntity();
 		}
 		
-		ClienteEntity cliente = new ClienteEntity();
+
 		cliente.setUsername(clienteDTO.getUsername());
 		cliente.setCpfCnpj(clienteDTO.getCpfCnpj());
 		cliente.setNome(clienteDTO.getNome());

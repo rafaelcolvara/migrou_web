@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/cliente")
+@RequestMapping
 @Api(value = "Api de consulta a usuarios do sistema")
 @CrossOrigin(origins = "*")
 public class ClienteController {
@@ -27,7 +27,7 @@ public class ClienteController {
 	@Autowired
 	VendedorClienteImpl vendedorCliente;
 	
-	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/cliente", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Cadastra cliente")
     public ResponseEntity<ClienteDTO> CadastraCliente(@RequestBody ClienteDTO clienteDTO) {
 		try {
@@ -38,7 +38,7 @@ public class ClienteController {
 		}		
 	}
 	
-	@GetMapping(value = "/buscaTodos", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/cliente/buscaTodos", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Consulta Todos os clientes")
     public ResponseEntity<List<ClienteDTO>> ConsultaTodos() {
 		try {
@@ -49,7 +49,7 @@ public class ClienteController {
 		}		
 	}
 
-	@GetMapping(value = "/{emailCliente}/buscaSeusVendedores", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/cliente/{emailCliente}/buscaSeusVendedores", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta Todos os Vendedores do cliente informado")
 	public ResponseEntity<ClienteListaVendedoresDTO> ConsultaVendedoresDoCliente(@PathVariable("emailCliente") String usernameCliente) {
 		try {
@@ -60,7 +60,7 @@ public class ClienteController {
 		}
 	}
 
-	@GetMapping(value = "/{emailCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/cliente/{emailCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta dados do cliente utilizando o login")
 	public ResponseEntity<ClienteDTO> consultaCliente(@PathVariable("emailCliente") String usernameCliente) {
 		try {
