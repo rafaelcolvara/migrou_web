@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/vendedor")
-@Api(value = "Api de consulta a usuarios do sistema")
+@RequestMapping
+@Api(value = "CRUD vendedores")
 @CrossOrigin(origins = "*")
 
 public class VendedorController {
@@ -31,7 +31,7 @@ public class VendedorController {
 	@Autowired
 	VendedorClienteImpl vendedorCliente;
 	
-	@PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/vendedor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Cadastra Vendedor")
     public ResponseEntity<VendedorDTO> CadastraVendedor(@RequestBody final VendedorDTO vendedorDTO) {
 	
@@ -43,7 +43,7 @@ public class VendedorController {
 		}		
 	}
 
-	@PatchMapping(value = "/vinculaCliente", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PatchMapping(value = "/vendedor/vinculaCliente", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Vincula um cliente ao vendedor")
     public ResponseEntity<ClienteVendedorDTO> VinculacaoVendedorCliente(@RequestBody final ClienteVendedorDTO vendedorClienteDTO) {
 		
@@ -56,14 +56,14 @@ public class VendedorController {
 		return new ResponseEntity<ClienteVendedorDTO>(vendedorClienteDTO, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/buscaTodos", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/vendedor/buscaTodos", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Consulta todos os Vendedores")
     public ResponseEntity<List<VendedorDTO>> BuscaTodosVendedor() {
 		
 		return new ResponseEntity<List<VendedorDTO>>(vendedorservice.buscaTodos(), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "{idVendedor}/buscaClientes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/vendedor/{idVendedor}/buscaClientes", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta todos os Clientes do Vendedor fornecido")
     public ResponseEntity<VendedorListaClientesDTO> BuscaClientesDoVendedor(@PathVariable("idVendedor") String usernameVendedor ) {
 		VendedorListaClientesDTO vendedorListaClientesDTO ;
@@ -77,7 +77,7 @@ public class VendedorController {
 		return new ResponseEntity<VendedorListaClientesDTO>(vendedorListaClientesDTO, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/cliente/{idCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/vendedor/cliente/{idCliente}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta todos os Vendedores do Cliente Fornecido")
 	public ResponseEntity<ClienteListaVendedoresDTO> BuscaVendedorDoCliente(@PathVariable("idCliente") String usernameCliente ) {
 		ClienteListaVendedoresDTO cliente;
@@ -89,7 +89,7 @@ public class VendedorController {
 		return new ResponseEntity<ClienteListaVendedoresDTO>(cliente, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{emailVendedor}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/vendedor/{emailVendedor}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ApiOperation(value = "Consulta dados do vendedor utilizando o seu login")
 	public ResponseEntity<VendedorDTO> buscaVendedor(@PathVariable("emailVendedor") String usernameVendedor ) {
 		VendedorDTO vendedorDTO;

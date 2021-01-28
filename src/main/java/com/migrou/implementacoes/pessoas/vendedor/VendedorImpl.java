@@ -49,7 +49,7 @@ public class VendedorImpl implements VendedorInterface {
 	@Override
 	@Transactional
 	public VendedorDTO incluiVendedor(VendedorDTO vendedorDTO) throws Exception {
-		
+
 		if (vendedorJPARepository.findByUsername(vendedorDTO.getUsername()).isPresent())
 			throw new Exception("Já existe outra pessoa com este email");
 		VendedorEntity vendedorEntity = vendedorBO.parseDTOtoPojo(vendedorDTO);
