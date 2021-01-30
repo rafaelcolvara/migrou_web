@@ -18,6 +18,7 @@ import org.hibernate.collection.internal.PersistentBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import sun.misc.Perf;
 
@@ -66,7 +67,11 @@ public class UsuarioImpl implements UsuarioInterface {
 
                 criaVendedorEntity(pessoaDTO, usuario);
             }
-            usuario = usuarioJPA.save(usuario);
+            try {
+                usuario = usuarioJPA.save(usuario);
+            }catch (Exception w) {
+                w.printStackTrace();
+            }
         } else {
             // se usuario já existe mas com outro perfil
             Usuario userExistente = usuarioExistente.get();
@@ -76,11 +81,17 @@ public class UsuarioImpl implements UsuarioInterface {
                 } else {
                     criaClienteEntity(pessoaDTO, userExistente);
                 }
-                usuario = usuarioJPA.save(userExistente);
+                try {
+                    usuario = usuarioJPA.save(userExistente);
+                } catch(Exception q){
+                    q.printStackTrace();
+                }
             } else {
                 throw new Exception(pessoaDTO.getTipoPessoa() + " ja cadastrado");
             }
         }
+
+
         return usuario;
     }
 
@@ -96,14 +107,28 @@ public class UsuarioImpl implements UsuarioInterface {
         usuario.setCliente(cliente);
     }
 
-    private void criaVendedorEntity(PessoaDTO pessoaDTO, Usuario usuario) {
+    private void criaVendedorEntity(PessoaDTO pessoaDTO, Usuario usuario) throws Exception {
+
+        if (Objects.isNull(pessoaDTO.getSegmentoComercial()) || pessoaDTO.getSegmentoComercial().isEmpty()){
+            throw new Exception("Segmento comercial nao pode ser nulo");
+        }
+        if (Objects.isNull(pessoaDTO.getNomeNegocio()) || pessoaDTO.getNomeNegocio().isEmpty()){
+            throw new Exception("Nome do negócio não pode ser nulo");
+        }
+        if (Objects.isNull(pessoaDTO.getNrCelular()) || pessoaDTO.getNrCelular().isEmpty()){
+            throw new Exception("Numero do celular não pode ser nulo");
+        }
+
         VendedorEntity vendedorEntity = new VendedorEntity();
         Set<Perfil> perfils = usuario.getPerfis();
+
+
         vendedorEntity.setUsername(pessoaDTO.getEmail());
         vendedorEntity.setNome(pessoaDTO.getNome());
         vendedorEntity.setCpfCnpj(pessoaDTO.getCpfCnpj());
-        vendedorEntity.setDtCadastro(pessoaDTO.getDataCadastro());
+        vendedorEntity.setDtCadastro(new Date());
         vendedorEntity.setDtNascimento(pessoaDTO.getDataNascimento());
+        vendedorEntity.setNrCelular(pessoaDTO.getNrCelular());
         vendedorEntity.setNomeSegmento(pessoaDTO.getSegmentoComercial());
         vendedorEntity.setNomeNegocio(pessoaDTO.getNomeNegocio());
         usuario.setVendedor(vendedorEntity);

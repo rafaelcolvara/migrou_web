@@ -95,6 +95,7 @@ public class UsuarioController {
             if (e.getMessage().contains("ja cadastrado")) {
                 return ResponseEntity.badRequest().body(pessoaDTO.getTipoPessoa() + " ja cadastrado" );
             }else {
+                e.printStackTrace();
                 return ResponseEntity.badRequest().body(e.getMessage() );
             }
         }
