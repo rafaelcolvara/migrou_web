@@ -25,7 +25,7 @@ public class ClienteDTO {
 
 	private String nome;
 
-	private String senha;
+	private String password;
 
 	@Size(max = 14)
 	private Long cpfCnpj;

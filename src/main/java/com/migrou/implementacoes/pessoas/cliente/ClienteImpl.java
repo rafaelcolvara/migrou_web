@@ -5,6 +5,8 @@ import java.util.*;
 import javax.transaction.Transactional;
 
 import com.migrou.interfaces.cliente.ClienteInterface;
+import com.migrou.interfaces.usuario.UsuarioInterface;
+import com.migrou.types.dto.PessoaDTO;
 import com.migrou.types.entity.ClienteEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,10 @@ public class ClienteImpl implements ClienteInterface {
 	@Autowired
 	CampanhaJPARepository campanhaJPA;
 
+	@Autowired
+	UsuarioInterface usuarioInterface;
+
+
 	@Override
 	public ClienteEntity atribuirCampanha(ClienteDTO clienteDTO) throws Exception {
 
@@ -48,12 +54,23 @@ public class ClienteImpl implements ClienteInterface {
 		} else		{
 			cliente = new ClienteEntity();
 		}
-		
+
+		PessoaDTO pessoaDTO = new PessoaDTO();
+		pessoaDTO.setNome(clienteDTO.getNome());
+		pessoaDTO.setTipoPessoa("CLIENTE");
+		pessoaDTO.setCpfCnpj(clienteDTO.getCpfCnpj());
+		pessoaDTO.setDataCadastro(new Date());
+		pessoaDTO.setNrCelular(clienteDTO.getNrCelular());
+		pessoaDTO.setEmail(clienteDTO.getUsername());
+		pessoaDTO.setSenha(clienteDTO.getPassword());
+		usuarioInterface.salva(pessoaDTO);
 
 		cliente.setUsername(clienteDTO.getUsername());
 		cliente.setCpfCnpj(clienteDTO.getCpfCnpj());
 		cliente.setNome(clienteDTO.getNome());
 		cliente.setDtCadastro(new Date());
+
+
 		return clienteBO.parsePojoToDTO(clienteJpaRepository.save(cliente));
 		
 	}
