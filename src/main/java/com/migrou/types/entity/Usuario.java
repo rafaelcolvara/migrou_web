@@ -43,6 +43,12 @@ public class Usuario implements  UserDetails {
         return this.perfis;
     }
 
+    public boolean isVendedor(){
+        return perfis.stream().anyMatch(x-> x.getNome().equals("VENDEDOR"));
+    }
+    public boolean isCliente(){
+        return perfis.stream().anyMatch(x-> x.getNome().equals("CLIENTE"));
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;

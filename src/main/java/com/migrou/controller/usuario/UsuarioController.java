@@ -3,6 +3,7 @@ package com.migrou.controller.usuario;
 import com.migrou.implementacoes.auth.TokenService;
 import com.migrou.implementacoes.pessoas.UsuarioImpl;
 import com.migrou.implementacoes.pessoas.bo.ClienteBO;
+import com.migrou.implementacoes.pessoas.bo.UsuarioBO;
 import com.migrou.implementacoes.pessoas.bo.VendedorBO;
 import com.migrou.interfaces.cliente.ClienteInterface;
 import com.migrou.interfaces.usuario.UsuarioJPA;
@@ -91,6 +92,8 @@ public class UsuarioController {
 
         try {
             Usuario usuario = usuarioImpl.salva(pessoaDTO);
+            PessoaDTO pessoa = new PessoaDTO();
+            UsuarioBO.parseUsuarioEntityPessoaDTO(usuario);
         }catch (Exception e){
             if (e.getMessage().contains("ja cadastrado")) {
                 return ResponseEntity.badRequest().body(pessoaDTO.getTipoPessoa() + " ja cadastrado" );
