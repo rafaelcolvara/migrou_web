@@ -92,6 +92,7 @@ public class UsuarioImpl implements UsuarioInterface {
     }
 
     @Override
+    @Transactional
     public Usuario salvaFoto(PessoaFotoDTO pessoaFotoDTO) throws Exception {
 
         if (Objects.isNull(pessoaFotoDTO.getUrlFoto()) || pessoaFotoDTO.getUrlFoto().isEmpty()) {
@@ -101,6 +102,9 @@ public class UsuarioImpl implements UsuarioInterface {
         Usuario user = usuarioJPA.findByUsername(pessoaFotoDTO.getUsername()).orElseThrow(() ->  new Exception("Usuário não encontrado"));
         if(!Objects.isNull(user.getCliente())){
             user.getCliente().setUrlFoto(pessoaFotoDTO.getUrlFoto());
+        }
+        if(!Objects.isNull(user.getVendedor())){
+            user.getVendedor().setUrlFoto(pessoaFotoDTO.getUrlFoto());
         }
 
         return usuarioJPA.save(user);
