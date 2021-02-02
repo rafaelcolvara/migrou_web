@@ -21,6 +21,7 @@ public class VendedorBO {
 		vendedor.setDtNascimento(vendedorDTO.getDataNascimento());
 		vendedor.setUsername(vendedorDTO.getUsername());
 		vendedor.setNome(vendedorDTO.getNome());
+		vendedor.setUrlFoto(vendedor.getUrlFoto());
 
 		return vendedor;
 
@@ -34,6 +35,7 @@ public class VendedorBO {
 		dto.setUsername (vendedorEntity.getUsername());
 		dto.setCpfCnpj(vendedorEntity.getCpfCnpj());
 		dto.setDataCadastro(vendedorEntity.getDtCadastro());
+		dto.setUrlFoto(vendedorEntity.getUrlFoto());
 		dto.setNome(vendedorEntity.getNome());
 		dto.setDataNascimento(vendedorEntity.getDtNascimento());
 		dto.setNrCelular(vendedorEntity.getNrCelular());
@@ -46,6 +48,7 @@ public class VendedorBO {
 		vendedorDTO.setUsername(pessoaDTO.getEmail());
 		vendedorDTO.setNrCelular(pessoaDTO.getNrCelular());
 		vendedorDTO.setNome(pessoaDTO.getNome());
+		vendedorDTO.setUrlFoto(pessoaDTO.getUrlFoto());
 		vendedorDTO.setDataCadastro(pessoaDTO.getDataCadastro());
 		vendedorDTO.setDataNascimento(pessoaDTO.getDataNascimento());
 		vendedorDTO.setNomeNegocio(pessoaDTO.getNomeNegocio());
