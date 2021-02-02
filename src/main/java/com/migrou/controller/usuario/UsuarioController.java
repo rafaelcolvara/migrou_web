@@ -8,10 +8,7 @@ import com.migrou.implementacoes.pessoas.bo.VendedorBO;
 import com.migrou.interfaces.cliente.ClienteInterface;
 import com.migrou.interfaces.usuario.UsuarioJPA;
 import com.migrou.interfaces.vendedor.VendedorInterface;
-import com.migrou.types.dto.ClienteDTO;
-import com.migrou.types.dto.LoginDTO;
-import com.migrou.types.dto.PessoaDTO;
-import com.migrou.types.dto.VendedorDTO;
+import com.migrou.types.dto.*;
 import com.migrou.types.entity.Usuario;
 import com.migrou.types.entity.VendedorEntity;
 import io.swagger.annotations.ApiOperation;
@@ -105,5 +102,20 @@ public class UsuarioController {
 
         return ResponseEntity.ok().body(pessoaDTO);
     }
+
+    @PatchMapping(value = "/foto", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Cadastro de usuários do Migrou ")
+    public ResponseEntity<String> atualizaFoto(@RequestBody PessoaFotoDTO pessoaFotoDTO) throws Exception {
+
+        try {
+            Usuario usuario = usuarioImpl.salvaFoto(pessoaFotoDTO);
+
+        }catch (Exception e){
+                return ResponseEntity.badRequest().body(e.getMessage() );
+        }
+
+        return ResponseEntity.ok().body("Atualizado com sucesso!");
+    }
+
 
 }

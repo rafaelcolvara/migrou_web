@@ -7,20 +7,16 @@ import com.migrou.interfaces.usuario.PerfilJPA;
 import com.migrou.interfaces.usuario.UsuarioInterface;
 import com.migrou.interfaces.usuario.UsuarioJPA;
 import com.migrou.interfaces.vendedor.VendedorInterface;
-import com.migrou.types.dto.ClienteDTO;
 import com.migrou.types.dto.PessoaDTO;
-import com.migrou.types.dto.VendedorDTO;
+import com.migrou.types.dto.PessoaFotoDTO;
 import com.migrou.types.entity.ClienteEntity;
 import com.migrou.types.entity.Perfil;
 import com.migrou.types.entity.Usuario;
 import com.migrou.types.entity.VendedorEntity;
-import org.hibernate.collection.internal.PersistentBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import sun.misc.Perf;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -93,6 +89,21 @@ public class UsuarioImpl implements UsuarioInterface {
 
 
         return usuario;
+    }
+
+    @Override
+    public Usuario salvaFoto(PessoaFotoDTO pessoaFotoDTO) throws Exception {
+
+        if (Objects.isNull(pessoaFotoDTO.getUrlFoto()) || pessoaFotoDTO.getUrlFoto().isEmpty()) {
+            throw new Exception("Informe a URL da foto");
+        }
+
+        Usuario user = usuarioJPA.findByUsername(pessoaFotoDTO.getUsername()).orElseThrow(() ->  new Exception("Usuário não encontrado"));
+        if(!Objects.isNull(user.getCliente())){
+            user.getCliente().setUrlFoto(pessoaFotoDTO.getUrlFoto());
+        }
+
+        return usuarioJPA.save(user);
     }
 
     private void criaClienteEntity(PessoaDTO pessoaDTO, Usuario usuario) {
