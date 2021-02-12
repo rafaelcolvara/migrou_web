@@ -115,6 +115,9 @@ public class UsuarioImpl implements UsuarioInterface {
         Set<Perfil> perfils = usuario.getPerfis();
         cliente.setUsername(pessoaDTO.getEmail());
         cliente.setCpfCnpj(pessoaDTO.getCpfCnpj());
+        cliente.setNrCelular(pessoaDTO.getNrCelular());
+        cliente.setUrlFoto(pessoaDTO.getUrlFoto());
+        cliente.setDtNascimento(pessoaDTO.getDataNascimento());
         cliente.setNome(pessoaDTO.getNome());
         cliente.setDtCadastro(new Date());
         perfils.add(new Perfil(1l, "CLIENTE"));
